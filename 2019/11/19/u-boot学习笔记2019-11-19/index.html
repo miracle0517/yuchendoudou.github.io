@@ -6,15 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2019/11 | yuchen blog</title>
+  <title>u-boot学习笔记2019-11-19 | yuchen blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="天生我材必有用">
-<meta property="og:type" content="website">
-<meta property="og:title" content="yuchen blog">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;archives&#x2F;2019&#x2F;11&#x2F;index.html">
+  <meta name="description" content="本文主要关于全志A64中U-BOOT的初始化部分进行分析">
+<meta name="keywords" content="u-boot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="u-boot学习笔记2019-11-19">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;19&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02019-11-19&#x2F;index.html">
 <meta property="og:site_name" content="yuchen blog">
-<meta property="og:description" content="天生我材必有用">
+<meta property="og:description" content="本文主要关于全志A64中U-BOOT的初始化部分进行分析">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-19T03:40:28.472Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="yuchen blog" type="application/atom+xml">
@@ -155,36 +157,46 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-u-boot学习笔记2019-11-19" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      u-boot学习笔记2019-11-19
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02019-11-19/" class="archive-article-date">
+
+        
+        <a href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02019-11-19/" class="archive-article-date">
   	<time datetime="2019-11-19T02:30:37.086Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-19</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02019-11-19/">u-boot学习笔记2019-11-19</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文主要关于全志A64中U-BOOT的初始化部分进行分析</p>
+<a id="more"></a>
 
-        <div class="article-info info-on-right">
-          
+<p>首先根据arch/arm/cpu/armv8/u-boot.lds该链接脚本文件来了解具体启动流程，该文件中内容如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">OUTPUT_FORMAT(<span class="string">"elf64-littleaarch64"</span>, <span class="string">"elf64-littleaarch64"</span>, <span class="string">"elf64-littleaarch64"</span>)  <span class="comment">//表示输出格式 64位小端</span></span><br><span class="line">OUTPUT_ARCH(aarch64)                    <span class="comment">//表示架构为64为架构</span></span><br><span class="line">ENTRY(_start)                           <span class="comment">//表明了起始指令地址为_start</span></span><br><span class="line">SECTIONS</span><br><span class="line">&#123;</span><br><span class="line">    . = BOOTADDR;                       <span class="comment">//表示链接的起始地址为BOOTADDR，</span></span><br><span class="line">    . = ALIGN(<span class="number">4</span>);                       <span class="comment">//表示4字节对齐</span></span><br><span class="line">	.head :</span><br><span class="line">	&#123;</span><br><span class="line">		CPUDIR/spare_head.o (.data*)       <span class="comment">//先存储的为arch/arm/cpu/armv8/spare_head.c编译后</span></span><br><span class="line">                                            <span class="comment">//的内容，这里只有一个结构体，用于存储一些必要参数，</span></span><br><span class="line">                                            <span class="comment">//起始地址存储的为跳转指令，便于跳转到start.s中执行</span></span><br><span class="line">	&#125;</span><br><span class="line">    . = ALIGN(<span class="number">8</span>);                           <span class="comment">//八字节对其，因为为64位架构</span></span><br><span class="line"></span><br><span class="line">	.<span class="built_in">text</span> :</span><br><span class="line">	&#123;</span><br><span class="line">		*(.__image_copy_start)              <span class="comment">//不占用空间，相当于一个位置标签,代表重定向时起始地址</span></span><br><span class="line">		CPUDIR/start.o (.<span class="built_in">text</span>*)             <span class="comment">//存放start.S代码段</span></span><br><span class="line">		*(.<span class="built_in">text</span>*)                           <span class="comment">//存放剩余所有代码段</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	. = ALIGN(<span class="number">8</span>);</span><br><span class="line">	.rodata : &#123; *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.rodata*))) &#125;      <span class="comment">//存放只读数据段</span></span><br><span class="line"></span><br><span class="line">	. = ALIGN(<span class="number">8</span>);</span><br><span class="line">	.data : &#123;</span><br><span class="line">		*(.data*)                               <span class="comment">//存放可读写数据段</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	. = ALIGN(<span class="number">8</span>);</span><br><span class="line"></span><br><span class="line">	. = .;</span><br><span class="line"></span><br><span class="line">	. = ALIGN(<span class="number">8</span>);</span><br><span class="line">	.u_boot_list : &#123;</span><br><span class="line">		KEEP(*(SORT(.u_boot_list*)));       <span class="comment">//所有以u_boot_list为起始地址的段都链接到这里</span></span><br><span class="line">                                            <span class="comment">//keep主要用于保证将所有段加进来，sort表示排序</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	. = ALIGN(<span class="number">8</span>);</span><br><span class="line"></span><br><span class="line">	.image_copy_end :</span><br><span class="line">	&#123;</span><br><span class="line">		*(.__image_copy_end)            <span class="comment">//位置标签，代表重定向程序拷贝结束位置</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	. = ALIGN(<span class="number">8</span>);</span><br><span class="line"></span><br><span class="line">	.rel_dyn_start :</span><br><span class="line">	&#123;</span><br><span class="line">		*(.__rel_dyn_start)             <span class="comment">//与_image_copu-start相同，定义一个位置标签，表</span></span><br><span class="line">                                        <span class="comment">//重定向时全局变量LABLE起始地址</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	.rela.dyn : &#123;</span><br><span class="line">		*(.rela*)                       <span class="comment">//表存放重定位代码时全局变量位置信息</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	.rel_dyn_end :</span><br><span class="line">	&#123;</span><br><span class="line">		*(.__rel_dyn_end)               <span class="comment">//表重定向时全局变量LABLE结束地址</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	_end = .;       <span class="comment">//代码结束地址也表示程序链接结束地址</span></span><br><span class="line"></span><br><span class="line">	. = ALIGN(<span class="number">8</span>);</span><br><span class="line"></span><br><span class="line">	.bss_start : &#123;</span><br><span class="line">		KEEP(*(.__bss_start));  <span class="comment">//段开始地址</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	.bss : &#123;</span><br><span class="line">		*(.bss*)</span><br><span class="line">		 . = ALIGN(<span class="number">8</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	.bss_end : &#123;</span><br><span class="line">		KEEP(*(.__bss_end));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/DISCARD/ : &#123; *(.dynsym) &#125;</span><br><span class="line">	/DISCARD/ : &#123; *(.dynstr*) &#125;</span><br><span class="line">	/DISCARD/ : &#123; *(.dynamic*) &#125;</span><br><span class="line">	/DISCARD/ : &#123; *(.plt*) &#125;</span><br><span class="line">	/DISCARD/ : &#123; *(.interp*) &#125;</span><br><span class="line">	/DISCARD/ : &#123; *(.gnu*) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来来看u-boot开始执行的指令，该指令位于arch/arm/cpu/armv8/start.s中如下所示：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.globl	_start</span><br><span class="line">_start:</span><br><span class="line">	b	reset       <span class="comment">//跳转到reset中执行</span></span><br><span class="line"></span><br><span class="line">	.align <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p>reset在本文件下，代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">reset:</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Could be EL3/EL2/EL1, Initial State:</span></span><br><span class="line"><span class="comment">	 * Little Endian, MMU Disabled, i/dCache Disabled</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	adr	x0, vectors</span><br><span class="line">	switch_el x1, <span class="number">3f</span>, <span class="number">2f</span>, <span class="number">1f</span></span><br><span class="line"><span class="number">3</span>:	msr	vbar_el3, x0</span><br><span class="line">	mrs	x0, scr_el3</span><br><span class="line">	orr	x0, x0, #<span class="number">0xf</span>			<span class="comment">/* SCR_EL3.NS|IRQ|FIQ|EA */</span></span><br><span class="line">	msr	scr_el3, x0</span><br><span class="line">	msr	cptr_el3, xzr			<span class="comment">/* Enable FP/SIMD */</span></span><br><span class="line">	ldr	x0, =COUNTER_FREQUENCY</span><br><span class="line">	msr	cntfrq_el0, x0			<span class="comment">/* Initialize CNTFRQ */</span></span><br><span class="line">	b	<span class="number">0f</span></span><br><span class="line"><span class="number">2</span>:	msr	vbar_el2, x0</span><br><span class="line">	mov	x0, #<span class="number">0x33ff</span></span><br><span class="line">	msr	cptr_el2, x0			<span class="comment">/* Enable FP/SIMD */</span></span><br><span class="line">	b	<span class="number">0f</span></span><br><span class="line"><span class="number">1</span>:	msr	vbar_el1, x0</span><br><span class="line">	mov	x0, #<span class="number">3</span> &lt;&lt; <span class="number">20</span></span><br><span class="line">	msr	cpacr_el1, x0			<span class="comment">/* Enable FP/SIMD */</span></span><br><span class="line"><span class="number">0</span>:</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Cache/BPB/TLB Invalidate</span></span><br><span class="line"><span class="comment">	 * i-cache is invalidated before enabled in icache_enable()</span></span><br><span class="line"><span class="comment">	 * tlb is invalidated before mmu is enabled in dcache_enable()</span></span><br><span class="line"><span class="comment">	 * d-cache is invalidated before enabled in dcache_enable()</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/* Processor specific initialization */</span></span><br><span class="line">	bl	lowlevel_init</span><br><span class="line"></span><br><span class="line">	branch_if_master x0, x1, master_cpu</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Slave CPUs</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">slave_cpu:</span><br><span class="line">	wfe</span><br><span class="line">	ldr	x1, =CPU_RELEASE_ADDR</span><br><span class="line">	ldr	x0, [x1]</span><br><span class="line">	cbz	x0, slave_cpu</span><br><span class="line">	br	x0			<span class="comment">/* branch to the given address */</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Master CPU</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">master_cpu:</span><br><span class="line">	bl	_main</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -196,95 +208,119 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" target="_blank" rel="noopener" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" target="_blank" rel="noopener" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;" target="_blank" rel="noopener"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02019-11-19/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="archive-article-date">
-  	<time datetime="2019-11-19T01:01:13.308Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-19</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">u-boot学习笔记-基本指令</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">u-boot学习笔记-基本指令</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">u-boot</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    目录，不存在的…
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/18/git-learning/" class="archive-article-date">
-  	<time datetime="2019-11-18T06:22:24.090Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-18</time>
-</a>
-        </div>
-    	 
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/18/git-learning/">git learning</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">git</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -307,8 +343,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
