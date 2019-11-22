@@ -16,10 +16,10 @@
 <meta property="og:site_name" content="yuchen blog">
 <meta property="og:description" content="本文主要关于基于全志A-64的armv7架构启动流程讲解">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;source&#x2F;_posts&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;CPSR.png">
-<meta property="og:updated_time" content="2019-11-22T03:13:09.927Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;CPSR.png">
+<meta property="og:updated_time" content="2019-11-22T03:16:02.251Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;source&#x2F;_posts&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;CPSR.png">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;CPSR.png">
   
     <link rel="alternative" href="/atom.xml" title="yuchen blog" type="application/atom+xml">
   
@@ -196,7 +196,7 @@
 
 <p>首先跳转到save_boot_params中执行，该函数在本文件下有定义，主要内容是直接跳转回来，它主要功能是存储一些参数，由于此时栈还未初始化，故不作任何处理，此时执行下一步。</p>
 <p>mrs    r0, cpsr，将状态寄存器cpsr值放到r0。</p>
-<p>and    r1, r0, #0x1f  将高位清零，关于cpsr请查看<a href="http://www.docin.com/p-73665362.html" target="_blank" rel="noopener">ARM7体系结构</a><br><img src="source/_posts/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7/CPSR.png" alt="CPSR"><br>teq    r1, #0x1a       </p>
+<p>and    r1, r0, #0x1f  将高位清零，关于cpsr请查看<a href="http://www.docin.com/p-73665362.html" target="_blank" rel="noopener">ARM7体系结构</a><br><img src="u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7/CPSR.png" alt="CPSR"><br>teq    r1, #0x1a       </p>
 
       
 
