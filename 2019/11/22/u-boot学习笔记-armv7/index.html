@@ -6,16 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>yuchen blog</title>
+  <title>u-boot学习笔记-armv7 | yuchen blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="天生我材必有用">
-<meta property="og:type" content="website">
-<meta property="og:title" content="yuchen blog">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;index.html">
+  <meta name="description" content="本文主要关于基于全志A-64的armv7架构启动流程讲解">
+<meta name="keywords" content="u-boot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="u-boot学习笔记-armv7">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;index.html">
 <meta property="og:site_name" content="yuchen blog">
-<meta property="og:description" content="天生我材必有用">
+<meta property="og:description" content="本文主要关于基于全志A-64的armv7架构启动流程讲解">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;CPSR.png">
+<meta property="og:updated_time" content="2019-11-22T03:09:23.184Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7&#x2F;CPSR.png">
   
     <link rel="alternative" href="/atom.xml" title="yuchen blog" type="application/atom+xml">
   
@@ -155,16 +159,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-u-boot学习笔记-armv7" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-u-boot学习笔记-armv7" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/22/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7/">u-boot学习笔记-armv7</a>
+    <h1 class="article-title" itemprop="name">
+      u-boot学习笔记-armv7
     </h1>
   
 
@@ -178,9 +180,24 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>本文主要关于基于全志A-64的armv7架构启动流程讲解</p>
-        
-          <a class="article-more-a" href="/2019/11/22/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7/#more">more >></a>
-        
+<a id="more"></a>
+
+<p>首先看根目录下的u-boot.lds，文件主要内容如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">ENTRY(_start)</span><br><span class="line">SECTIONS</span><br><span class="line">&#123;</span><br><span class="line"> . = <span class="number">0x4A000000</span>;</span><br><span class="line"> . = ALIGN(<span class="number">4</span>);</span><br><span class="line"> .head :</span><br><span class="line"> &#123;</span><br><span class="line">  *(.__image_copy_start)</span><br><span class="line">  arch/arm/cpu/armv7/spare_head.o (.data*)</span><br><span class="line"> &#125;</span><br><span class="line">        .hash :</span><br><span class="line">        &#123;</span><br><span class="line">  arch/arm/cpu/armv7/uboot_hash.o(.data*)</span><br><span class="line">        &#125;</span><br><span class="line"> . = ALIGN(<span class="number">4</span>);</span><br><span class="line"> .<span class="built_in">text</span> :</span><br><span class="line"> &#123;</span><br><span class="line">  *(.vectors)</span><br><span class="line">  arch/arm/cpu/armv7/start.o (.<span class="built_in">text</span>*)</span><br><span class="line">  *(.<span class="built_in">text</span>*)</span><br><span class="line"> &#125;</span><br><span class="line"> . = ALIGN(<span class="number">4</span>);</span><br><span class="line"> .rodata : &#123; *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.rodata*))) &#125;</span><br><span class="line"> . = ALIGN(<span class="number">4</span>);</span><br><span class="line"> .data : &#123;</span><br><span class="line">  *(.data*)</span><br><span class="line"> &#125;</span><br><span class="line"> . = ALIGN(<span class="number">4</span>);</span><br><span class="line"> . = .;</span><br><span class="line"> . = ALIGN(<span class="number">4</span>);</span><br><span class="line"> .u_boot_list : &#123;</span><br><span class="line">  KEEP(*(SORT(.u_boot_list*)));</span><br><span class="line"> &#125;</span><br><span class="line"> . = ALIGN(<span class="number">4</span>);</span><br><span class="line"> .image_copy_end :</span><br><span class="line"> &#123;</span><br><span class="line">  *(.__image_copy_end)</span><br><span class="line"> &#125;</span><br><span class="line"> .rel_dyn_start :</span><br><span class="line"> &#123;</span><br><span class="line">  *(.__rel_dyn_start)</span><br><span class="line"> &#125;</span><br><span class="line"> .rel.dyn : &#123;</span><br><span class="line">  *(.rel*)</span><br><span class="line"> &#125;</span><br><span class="line"> .rel_dyn_end :</span><br><span class="line"> &#123;</span><br><span class="line">  *(.__rel_dyn_end)</span><br><span class="line"> &#125;</span><br><span class="line"> .<span class="built_in">end</span> :</span><br><span class="line"> &#123;</span><br><span class="line">  *(.__end)</span><br><span class="line"> &#125;</span><br><span class="line"> _image_binary_end = .;</span><br><span class="line"></span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<p>由lds文件可以看出入口函数为_start，链接流程为spare_head，uboot_hash，vector,start···等文件，其中spare_head.c位于armv7文件夹下，里面主要有一个结构体，结构体的第一个数据为一个跳转指令，该指令使PC指针跳过spare_head.c以及uboot_hash.c文件，其中uboot_hash.c里面只有一个未初始化的hash表，之后指针跳转到vector.s文件执行，该文件位于arch/arm/lib下面，其中_start内容如下所示</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">_start:</span><br><span class="line">	ldr	pc, _reset_vec</span><br><span class="line">	ldr	pc, _undefined_instruction</span><br><span class="line">	ldr	pc, _software_interrupt</span><br><span class="line">	ldr	pc, _prefetch_abort</span><br><span class="line">	ldr	pc, _data_abort</span><br><span class="line">	ldr	pc, _not_used</span><br><span class="line">	ldr	pc, _irq</span><br><span class="line">	ldr	pc, _fiq</span><br></pre></td></tr></table></figure>
+
+<p>根据上面内容我们可以看出首先为一个中断向量表，由于_start下第一个指令为ldr pc,_reset_vec，故接下来跳转到_reset_vec执行，在本文件中有如下定义：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">reset_vec:			.<span class="keyword">word</span> reset</span><br><span class="line">_undefined_instruction:	.<span class="keyword">word</span> undefined_instruction</span><br><span class="line">_software_interrupt:	.<span class="keyword">word</span> software_interrupt</span><br><span class="line">_prefetch_abort:	.<span class="keyword">word</span> prefetch_abort</span><br><span class="line">_data_abort:		.<span class="keyword">word</span> data_abort</span><br><span class="line">_not_used:		.<span class="keyword">word</span> not_used</span><br><span class="line">_irq:			.<span class="keyword">word</span> irq</span><br><span class="line">_fiq:			.<span class="keyword">word</span> fiq</span><br></pre></td></tr></table></figure>
+
+<p>即reset_vec存放的为reset的地址，也即此时实际要跳转到的地址为reset的地址，reset位于start.s文件中，如下所示：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">reset:</span><br><span class="line">	bl	save_boot_params</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * disable interrupts (FIQ and IRQ), also set the cpu to SVC32 mode,</span></span><br><span class="line"><span class="comment">	 * except if in HYP mode already</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	mrs	r0, cpsr</span><br><span class="line">	<span class="keyword">and</span>	r1, r0, #<span class="number">0x1f</span>		@ mask mode bits</span><br><span class="line">	teq	r1, #<span class="number">0x1a</span>		@ test <span class="keyword">for</span> HYP mode</span><br><span class="line">	bicne	r0, r0, #<span class="number">0x1f</span>		@ <span class="built_in">clear</span> all mode bits</span><br><span class="line">	orrne	r0, r0, #<span class="number">0x13</span>		@ <span class="built_in">set</span> SVC mode</span><br><span class="line">	orr	r0, r0, #<span class="number">0xc0</span>		@ disable FIQ <span class="keyword">and</span> IRQ</span><br><span class="line">	msr	cpsr,r0</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Setup vector:</span></span><br><span class="line"><span class="comment"> * (OMAP4 spl TEXT_BASE is not 32 byte aligned.</span></span><br><span class="line"><span class="comment"> * Continue to use ROM code vector only in OMAP4 spl)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> !(defined(CONFIG_OMAP44XX) &amp;&amp; defined(CONFIG_SPL_BUILD))</span></span><br><span class="line">	<span class="comment">/* Set V=0 in CP15 SCTRL register - for VBAR to point to vector */</span></span><br><span class="line">	mrc	p15, <span class="number">0</span>, r0, c1, c0, <span class="number">0</span>	@ Read CP15 SCTRL Register</span><br><span class="line">	bic	r0, #CR_V		@ V = <span class="number">0</span></span><br><span class="line">	mcr	p15, <span class="number">0</span>, r0, c1, c0, <span class="number">0</span>	@ Write CP15 SCTRL Register</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* Set vector address in CP15 VBAR register */</span></span><br><span class="line">	ldr	r0, =_start</span><br><span class="line">	mcr	p15, <span class="number">0</span>, r0, c12, c0, <span class="number">0</span>	@Set VBAR</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* the mask ROM code should have PLL and others stable */</span></span><br><span class="line">#ifndef CONFIG_SKIP_LOWLEVEL_INIT</span><br><span class="line">	bl	cpu_init_cp15</span><br><span class="line">	bl	cpu_init_crit</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">	bl	_main</span><br></pre></td></tr></table></figure>
+
+<p>首先跳转到save_boot_params中执行，该函数在本文件下有定义，主要内容是直接跳转回来，它主要功能是存储一些参数，由于此时栈还未初始化，故不作任何处理，此时执行下一步。</p>
+<p>mrs    r0, cpsr，将状态寄存器cpsr值放到r0。</p>
+<p>and    r1, r0, #0x1f  将高位清零，关于cpsr请查看<a href="http://www.docin.com/p-73665362.html" target="_blank" rel="noopener">ARM7体系结构</a><br><img src="u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7/CPSR.png" alt="CPSR"><br>teq    r1, #0x1a       </p>
+
       
 
       
@@ -202,16 +219,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/22/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" target="_blank" rel="noopener" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" target="_blank" rel="noopener" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;" target="_blank" rel="noopener"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/11/22/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-armv7/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02019-11-19/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">u-boot学习笔记-Start.S</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -231,236 +307,14 @@
 
 
 
-
   
-    <article id="post-u-boot学习笔记2019-11-19" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02019-11-19/">u-boot学习笔记-Start.S</a>
-    </h1>
   
 
-        
-        <a href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02019-11-19/" class="archive-article-date">
-  	<time datetime="2019-11-19T02:30:37.086Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本文主要关于全志A64中U-BOOT的初始化部分进行分析</p>
-        
-          <a class="article-more-a" href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02019-11-19/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">u-boot</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02019-11-19/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-u-boot学习笔记" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">u-boot学习笔记-基本指令</a>
-    </h1>
   
 
-        
-        <a href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="archive-article-date">
-  	<time datetime="2019-11-19T01:01:13.308Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本文主要关于ARMV8架构汇编的一些常用指令。</p>
-        
-          <a class="article-more-a" href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">u-boot</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-git-learning" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/18/git-learning/">git learning</a>
-    </h1>
   
 
-        
-        <a href="/2019/11/18/git-learning/" class="archive-article-date">
-  	<time datetime="2019-11-18T06:22:24.090Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-18</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本文主要关于git的一些常用指令，以及如何初始化。</p>
-        
-          <a class="article-more-a" href="/2019/11/18/git-learning/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">git</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/18/git-learning/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
 
 
@@ -483,8 +337,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
