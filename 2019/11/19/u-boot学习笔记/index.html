@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="yuchen blog">
 <meta property="og:description" content="本文主要关于ARMV8架构汇编的一些常用指令。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-19T02:28:27.214Z">
+<meta property="og:updated_time" content="2019-11-22T07:36:48.960Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="yuchen blog" type="application/atom+xml">
@@ -180,7 +180,7 @@
         <p>本文主要关于ARMV8架构汇编的一些常用指令。</p>
 <a id="more"></a>
 
-<h1 id="相关汇编指令"><a href="#相关汇编指令" class="headerlink" title="相关汇编指令"></a>相关汇编指令</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">MRS 通用寄存器，程序状态寄存器（CPSR或SPSR）    //该指令用于将程序状态寄存器的内容传送到通用寄存器</span><br><span class="line"></span><br><span class="line">MSR 程序状态寄存器 操作数       //该指令用于将操作数内容传送到程序状态寄存器</span><br><span class="line"></span><br><span class="line">adr 通用寄存器 指令地址     //该指令用于将指令的当前地址传输到通用寄存器，程序放的位置变化时，则指令的当前地址也会变化，与下面指令相对应</span><br><span class="line"></span><br><span class="line">ldr 通用寄存器 =指令地址    //该指令用于将指令的绝对地址传输到通用寄存器，绝对地址是在程序链接时已经确定的，表示相对于程序起始地址，目前指令的地址。</span><br><span class="line"></span><br><span class="line">ORR 目的寄存器，操作数1，操作数2    //该指令用于将两个操作数进行逻辑或运算，并将结果放到目的寄存器，操作数一应为一个寄存器。操作数二可以不为寄存器。</span><br><span class="line"></span><br><span class="line">mov 寄存器，操作数  //该指令将操作数移动到寄存器中，可以移动立即数。</span><br><span class="line"></span><br><span class="line">B       //直接跳转指令。</span><br><span class="line"></span><br><span class="line">BL      //带链接跳转，使用该指令时在跳转时会将当前指令的下一条指令存储在lr寄存器中，然后跳转，主要为了调用子程序，在子程序执行完后返回当前位置继续执行。</span><br><span class="line"></span><br><span class="line">CBZ 操作数1，操作数2    //若操作数1为0则跳转到操作数2地址。</span><br><span class="line"></span><br><span class="line">CBNZ 操作数1，操作数2   //若操作数1非零则跳转到操作数2地址执行。</span><br><span class="line"></span><br><span class="line">WFE     进入低功耗睡眠指令，当当前内核无法获取到资源时可以调用该指令进入低功耗模式来等待资源</span><br><span class="line"></span><br><span class="line">ret     //推出目前程序指令，该指令会从lr或直接从栈中取出进入该子程序前将要执行的下一条指令的地址，具体从lr还是从栈中取出地址根据进入子程序执行的指令有关，采用call调用子程序，则推出子程序时从栈中取地址，采用bl则从lr中取地址。</span><br></pre></td></tr></table></figure>
+<h1 id="相关汇编指令"><a href="#相关汇编指令" class="headerlink" title="相关汇编指令"></a>相关汇编指令</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">MRS 通用寄存器，程序状态寄存器（CPSR或SPSR）    //该指令用于将程序状态寄存器的内容传送到通用寄存器</span><br><span class="line"></span><br><span class="line">MSR 程序状态寄存器 操作数       //该指令用于将操作数内容传送到程序状态寄存器</span><br><span class="line"></span><br><span class="line">adr 通用寄存器 指令地址     //该指令用于将指令的当前地址传输到通用寄存器，程序放的位置变化时，则指令的当前地址也会变化，与下面指令相对应</span><br><span class="line"></span><br><span class="line">ldr 通用寄存器 =指令地址    //该指令用于将指令的绝对地址传输到通用寄存器，绝对地址是在程序链接时已经确定的，表示相对于程序起始地址，目前指令的地址。</span><br><span class="line"></span><br><span class="line">str 通用寄存器 地址			//该指令用于将通用寄存器中数据传到内存中</span><br><span class="line"></span><br><span class="line">ORR 目的寄存器，操作数1，操作数2    //该指令用于将两个操作数进行逻辑或运算，并将结果放到目的寄存器，操作数一应为一个寄存器。操作数二可以不为寄存器。</span><br><span class="line"></span><br><span class="line">mov 寄存器，操作数  //该指令将操作数移动到寄存器中，可以移动立即数。</span><br><span class="line"></span><br><span class="line">B       //直接跳转指令。</span><br><span class="line"></span><br><span class="line">BL      //带链接跳转，使用该指令时在跳转时会将当前指令的下一条指令存储在lr寄存器中，然后跳转，主要为了调用子程序，在子程序执行完后返回当前位置继续执行。</span><br><span class="line"></span><br><span class="line">CBZ 操作数1，操作数2    //若操作数1为0则跳转到操作数2地址。</span><br><span class="line"></span><br><span class="line">CBNZ 操作数1，操作数2   //若操作数1非零则跳转到操作数2地址执行。</span><br><span class="line"></span><br><span class="line">WFE     进入低功耗睡眠指令，当当前内核无法获取到资源时可以调用该指令进入低功耗模式来等待资源</span><br><span class="line"></span><br><span class="line">ret     //推出目前程序指令，该指令会从lr或直接从栈中取出进入该子程序前将要执行的下一条指令的地址，具体从lr还是从栈中取出地址根据进入子程序执行的指令有关，采用call调用子程序，则推出子程序时从栈中取地址，采用bl则从lr中取地址。</span><br></pre></td></tr></table></figure>
 
 
       
@@ -415,11 +415,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">u-boot</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">u-boot</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
               </li>
             
             <div class="clearfix"></div>
