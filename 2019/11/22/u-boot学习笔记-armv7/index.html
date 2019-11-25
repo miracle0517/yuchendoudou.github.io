@@ -17,7 +17,7 @@
 <meta property="og:description" content="本文主要关于基于全志A-64的armv7架构启动流程讲解">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assets&#x2F;CPSR.png">
-<meta property="og:updated_time" content="2019-11-23T06:45:58.325Z">
+<meta property="og:updated_time" content="2019-11-23T07:27:03.828Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assets&#x2F;CPSR.png">
   
@@ -228,6 +228,9 @@
 <p>在init_sequence_f后面是关与数据的拷贝相关函数，主要将设备树，配置信息等（除了U-BOOT代码外几乎所有其他数据）拷贝到对应位置，使用的函数如下：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">	setup_dram_config,</span><br><span class="line">	<span class="comment">//show_dram_config,</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_PPC</span></span><br><span class="line">	setup_board_part1,</span><br><span class="line">	INIT_FUNC_WATCHDOG_RESET</span><br><span class="line">	setup_board_part2,</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">	display_new_sp,</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_SYS_EXTBDINFO</span></span><br><span class="line">	setup_board_extra,</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">	INIT_FUNC_WATCHDOG_RESET</span><br><span class="line">	reloc_fdt,</span><br><span class="line">	reloc_sysconfig,</span><br><span class="line">	setup_reloc,</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> !defined(CONFIG_ARM) &amp;&amp; !defined(CONFIG_SANDBOX)</span></span><br><span class="line">	jump_to_copy,</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">	<span class="literal">NULL</span>,</span><br></pre></td></tr></table></figure>
 
+<p>输出如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Relocation Offset is: <span class="number">75</span>ee0000</span><br><span class="line">Relocating to bfee0000, <span class="keyword">new</span> gd at b6e9fe78, sp at b6e2c290</span><br></pre></td></tr></table></figure>
+
 <p>到这关于重定向前初始化算是结束了，接下来将会对U-BOOT的代码进行重定向，然后就可以跳转到SDRAM中执行了。关于剩下的下次再详解。</p>
 <h2 id="关于遗留的问题："><a href="#关于遗留的问题：" class="headerlink" title="关于遗留的问题："></a>关于遗留的问题：</h2><p>1，在重定向前spare_head.c中的数据不知道在哪里初始化的，因为该数组中定义的SDRAM为0，但是后面却从中读到的值为2GB。<br>2，gd不知道为什么在栈中分配空间，明明在进入board_init_f函数前已经分配过空间了，对应的是r9，结果到函数中再次分配空间。<br>3，关于反汇编还是不知道怎么看。</p>
 
@@ -312,6 +315,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2019/11/23/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E9%87%8D%E5%AE%9A%E5%90%91/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          u-boot学习笔记-重定向
+        
+      </div>
+    </a>
   
   
     <a href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02019-11-19/" id="article-nav-older" class="article-nav-link-wrap">
@@ -441,11 +453,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">u-boot</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">u-boot</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
               </li>
             
             <div class="clearfix"></div>
