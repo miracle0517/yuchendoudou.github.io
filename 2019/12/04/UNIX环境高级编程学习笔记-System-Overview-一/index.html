@@ -6,16 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: LINUX | yuchen blog</title>
+  <title>UNIX环境高级编程学习笔记 System Overview | yuchen blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="天生我材必有用">
-<meta property="og:type" content="website">
-<meta property="og:title" content="yuchen blog">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;LINUX&#x2F;index.html">
+  <meta name="description" content="本文主要关于UNIX环境高级编程第三版英文版第一章部分内容，主要一些基本概念及源码分析。">
+<meta name="keywords" content="LINUX">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UNIX环境高级编程学习笔记 System Overview">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;04&#x2F;UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-System-Overview-%E4%B8%80&#x2F;index.html">
 <meta property="og:site_name" content="yuchen blog">
-<meta property="og:description" content="天生我材必有用">
+<meta property="og:description" content="本文主要关于UNIX环境高级编程第三版英文版第一章部分内容，主要一些基本概念及源码分析。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assets&#x2F;malloc%E4%B8%8Esbrk.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assets&#x2F;C%E5%BA%93%E4%B8%8E%E7%B3%BB%E7%BB%9F%E5%9B%9E%E8%B0%83.png">
+<meta property="og:updated_time" content="2019-12-04T09:26:43.822Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assets&#x2F;malloc%E4%B8%8Esbrk.png">
   
     <link rel="alternative" href="/atom.xml" title="yuchen blog" type="application/atom+xml">
   
@@ -155,36 +160,116 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-UNIX环境高级编程学习笔记-System-Overview-一" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      UNIX环境高级编程学习笔记 System Overview
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/12/04/UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-System-Overview-%E4%B8%80/" class="archive-article-date">
+
+        
+        <a href="/2019/12/04/UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-System-Overview-%E4%B8%80/" class="archive-article-date">
   	<time datetime="2019-12-04T02:37:56.372Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-04</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/12/04/UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-System-Overview-%E4%B8%80/">UNIX环境高级编程学习笔记 System Overview</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文主要关于UNIX环境高级编程第三版英文版第一章部分内容，主要一些基本概念及源码分析。</p>
+<a id="more"></a>
 
-        <div class="article-info info-on-right">
-          
+<h1 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h1><p>UNIX的文件系统是目录与文件的分级组合，所有文件的起始目录为根目录，用（/）表示。</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;dirent.h&gt;</span></span></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">DIR *dp;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">dirent</span> *<span class="title">dirp</span>;</span></span><br><span class="line"><span class="keyword">if</span> (argc != <span class="number">2</span>)</span><br><span class="line">err_quit(<span class="string">"usage: ls directory_name"</span>);</span><br><span class="line"><span class="keyword">if</span> ((dp = opendir(argv[<span class="number">1</span>])) == <span class="literal">NULL</span>)</span><br><span class="line">err_sys(<span class="string">"can’t open %s"</span>, argv[<span class="number">1</span>]);</span><br><span class="line"><span class="keyword">while</span> ((dirp = readdir(dp)) != <span class="literal">NULL</span>)</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%s\n"</span>, dirp-&gt;d_name);</span><br><span class="line">closedir(dp);</span><br><span class="line"><span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该函数功能类似于ls，与ls不同的是ls会按字母表排列文件名称，而这个函数是仅仅按存储顺序来输出目录文件。</p>
+<h3 id="函数详解："><a href="#函数详解：" class="headerlink" title="函数详解："></a>函数详解：</h3><p>第一行包含了头文件“apue.h”，该文件在上个博客有讲来源，该文件包含了一些标准系统头文件并定义了许多常量与我们将用到的函数原型，具体内容入下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Our own header, to be included before all standard system headers.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span>	_APUE_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	_APUE_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _POSIX_C_SOURCE 200809L</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(SOLARIS)		<span class="comment">/* Solaris 10 */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _XOPEN_SOURCE 600</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _XOPEN_SOURCE 700</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;		/* some systems still require this */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/termios.h&gt;	/* for winsize */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(MACOS) || !defined(TIOCGWINSZ)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/ioctl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;		/* for convenience */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;		/* for convenience */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stddef.h&gt;		/* for offsetof */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;		/* for convenience */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;		/* for convenience */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;signal.h&gt;		/* for SIG_ERR */</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	MAXLINE	4096			<span class="comment">/* max line length */</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Default file access permissions for new files.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	FILE_MODE	(S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Default permissions for new directories.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	DIR_MODE	(FILE_MODE | S_IXUSR | S_IXGRP | S_IXOTH)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span>	<span class="keyword">void</span>	<span class="title">Sigfunc</span><span class="params">(<span class="keyword">int</span>)</span></span>;	<span class="comment">/* for signal handlers */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	min(a,b)	((a) &lt; (b) ? (a) : (b))</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	max(a,b)	((a) &gt; (b) ? (a) : (b))</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Prototypes for our own functions.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">char</span>	*<span class="title">path_alloc</span><span class="params">(<span class="keyword">size_t</span> *)</span></span>;				<span class="comment">/* &#123;Prog pathalloc&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">long</span>	 <span class="title">open_max</span><span class="params">(<span class="keyword">void</span>)</span></span>;					<span class="comment">/* &#123;Prog openmax&#125; */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">set_cloexec</span><span class="params">(<span class="keyword">int</span>)</span></span>;					<span class="comment">/* &#123;Prog setfd&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>	 <span class="title">clr_fl</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	 <span class="title">set_fl</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;					<span class="comment">/* &#123;Prog setfl&#125; */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>	 <span class="title">pr_exit</span><span class="params">(<span class="keyword">int</span>)</span></span>;						<span class="comment">/* &#123;Prog prexit&#125; */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>	 <span class="title">pr_mask</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *)</span></span>;				<span class="comment">/* &#123;Prog prmask&#125; */</span></span><br><span class="line"><span class="function">Sigfunc	*<span class="title">signal_intr</span><span class="params">(<span class="keyword">int</span>, Sigfunc *)</span></span>;		<span class="comment">/* &#123;Prog signal_intr_function&#125; */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>	 <span class="title">daemonize</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *)</span></span>;			<span class="comment">/* &#123;Prog daemoninit&#125; */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>	 <span class="title">sleep_us</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span>)</span></span>;			<span class="comment">/* &#123;Ex sleepus&#125; */</span></span><br><span class="line"><span class="keyword">ssize_t</span>	 readn(<span class="keyword">int</span>, <span class="keyword">void</span> *, <span class="keyword">size_t</span>);		<span class="comment">/* &#123;Prog readn_writen&#125; */</span></span><br><span class="line"><span class="keyword">ssize_t</span>	 writen(<span class="keyword">int</span>, <span class="keyword">const</span> <span class="keyword">void</span> *, <span class="keyword">size_t</span>);	<span class="comment">/* &#123;Prog readn_writen&#125; */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">fd_pipe</span><span class="params">(<span class="keyword">int</span> *)</span></span>;					<span class="comment">/* &#123;Prog sock_fdpipe&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">recv_fd</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">ssize_t</span> (*func)(<span class="keyword">int</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">		         <span class="keyword">const</span> <span class="keyword">void</span> *, <span class="keyword">size_t</span>))</span></span>;	<span class="comment">/* &#123;Prog recvfd_sockets&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">send_fd</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;					<span class="comment">/* &#123;Prog sendfd_sockets&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">send_err</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">		          <span class="keyword">const</span> <span class="keyword">char</span> *)</span></span>;			<span class="comment">/* &#123;Prog senderr&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">serv_listen</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *)</span></span>;			<span class="comment">/* &#123;Prog servlisten_sockets&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">serv_accept</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">uid_t</span> *)</span></span>;			<span class="comment">/* &#123;Prog servaccept_sockets&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">cli_conn</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *)</span></span>;			<span class="comment">/* &#123;Prog cliconn_sockets&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">buf_args</span><span class="params">(<span class="keyword">char</span> *, <span class="keyword">int</span> (*func)(<span class="keyword">int</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">		          <span class="keyword">char</span> **))</span></span>;				<span class="comment">/* &#123;Prog bufargs&#125; */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">tty_cbreak</span><span class="params">(<span class="keyword">int</span>)</span></span>;					<span class="comment">/* &#123;Prog raw&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">tty_raw</span><span class="params">(<span class="keyword">int</span>)</span></span>;						<span class="comment">/* &#123;Prog raw&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">tty_reset</span><span class="params">(<span class="keyword">int</span>)</span></span>;					<span class="comment">/* &#123;Prog raw&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>	 <span class="title">tty_atexit</span><span class="params">(<span class="keyword">void</span>)</span></span>;					<span class="comment">/* &#123;Prog raw&#125; */</span></span><br><span class="line"><span class="function">struct termios	*<span class="title">tty_termios</span><span class="params">(<span class="keyword">void</span>)</span></span>;			<span class="comment">/* &#123;Prog raw&#125; */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">ptym_open</span><span class="params">(<span class="keyword">char</span> *, <span class="keyword">int</span>)</span></span>;			<span class="comment">/* &#123;Prog ptyopen&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>		 <span class="title">ptys_open</span><span class="params">(<span class="keyword">char</span> *)</span></span>;					<span class="comment">/* &#123;Prog ptyopen&#125; */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span>	TIOCGWINSZ</span></span><br><span class="line"><span class="keyword">pid_t</span>	 pty_fork(<span class="keyword">int</span> *, <span class="keyword">char</span> *, <span class="keyword">int</span>, <span class="keyword">const</span> struct termios *,</span><br><span class="line">		          <span class="keyword">const</span> struct winsize *);	<span class="comment">/* &#123;Prog ptyfork&#125; */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span>		<span class="title">lock_reg</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">off_t</span>, <span class="keyword">int</span>, <span class="keyword">off_t</span>)</span></span>; <span class="comment">/* &#123;Prog lockreg&#125; */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	read_lock(fd, offset, whence, len) \</span></span><br><span class="line">			lock_reg((fd), F_SETLK, F_RDLCK, (offset), (whence), (len))</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	readw_lock(fd, offset, whence, len) \</span></span><br><span class="line">			lock_reg((fd), F_SETLKW, F_RDLCK, (offset), (whence), (len))</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	write_lock(fd, offset, whence, len) \</span></span><br><span class="line">			lock_reg((fd), F_SETLK, F_WRLCK, (offset), (whence), (len))</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	writew_lock(fd, offset, whence, len) \</span></span><br><span class="line">			lock_reg((fd), F_SETLKW, F_WRLCK, (offset), (whence), (len))</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	un_lock(fd, offset, whence, len) \</span></span><br><span class="line">			lock_reg((fd), F_SETLK, F_UNLCK, (offset), (whence), (len))</span><br><span class="line"></span><br><span class="line"><span class="keyword">pid_t</span>	lock_test(<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">off_t</span>, <span class="keyword">int</span>, <span class="keyword">off_t</span>);		<span class="comment">/* &#123;Prog locktest&#125; */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	is_read_lockable(fd, offset, whence, len) \</span></span><br><span class="line">			(lock_test((fd), F_RDLCK, (offset), (whence), (len)) == <span class="number">0</span>)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	is_write_lockable(fd, offset, whence, len) \</span></span><br><span class="line">			(lock_test((fd), F_WRLCK, (offset), (whence), (len)) == <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">err_msg</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *, ...)</span></span>;			<span class="comment">/* &#123;App misc_source&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">err_dump</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *, ...)</span> __<span class="title">attribute__</span><span class="params">((noreturn))</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">err_quit</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *, ...)</span> __<span class="title">attribute__</span><span class="params">((noreturn))</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">err_cont</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">const</span> <span class="keyword">char</span> *, ...)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">err_exit</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">const</span> <span class="keyword">char</span> *, ...)</span> __<span class="title">attribute__</span><span class="params">((noreturn))</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">err_ret</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *, ...)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">err_sys</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *, ...)</span> __<span class="title">attribute__</span><span class="params">((noreturn))</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">log_msg</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *, ...)</span></span>;			<span class="comment">/* &#123;App misc_source&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">log_open</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *, <span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">log_quit</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *, ...)</span> __<span class="title">attribute__</span><span class="params">((noreturn))</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">log_ret</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *, ...)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">log_sys</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *, ...)</span> __<span class="title">attribute__</span><span class="params">((noreturn))</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">log_exit</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">const</span> <span class="keyword">char</span> *, ...)</span> __<span class="title">attribute__</span><span class="params">((noreturn))</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">TELL_WAIT</span><span class="params">(<span class="keyword">void</span>)</span></span>;		<span class="comment">/* parent/child from &#123;Sec race_conditions&#125; */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">TELL_PARENT</span><span class="params">(<span class="keyword">pid_t</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">TELL_CHILD</span><span class="params">(<span class="keyword">pid_t</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">WAIT_PARENT</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>	<span class="title">WAIT_CHILD</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span>	<span class="comment">/* _APUE_H */</span></span></span><br></pre></td></tr></table></figure>
+
+<p>第二行我们包含一个系统头文件，dirent.h，该文件主要用于我们获取opendir和readdir的函数原型，以及dirent结构体的定义。在一些系统中，部分函数定义被分散到多个头文件，例如，在ubuntu12.04发行版中，/usr/include/dirent.h声明了部分函数原型并包含了bits/dirent.h，这个头文件定义了dirent结构体。</p>
+<p>由于进入目录条目的实际格式在不同UNXI系统中是不相同的，所以我们使用opendir，readdir以及closedir来操作目录。opendir函数返回一个指向DIR结构体的指针，然后我们把这个指针传给readdir函数，我们不用关心DIR结构体的实际内容，我们只需循环调用readdir来读取每个目录条目，readdir函数返回一个指向dirent结构体的指针，或者当读取完成后返回一个null,然后我们直接读出dirent结构体中的d_name就得到了文件的名称。</p>
+<p>当项目结束后我们调用exit返回0，0表示成功，1到255表示有错误发生。</p>
+<h1 id="输入与输出"><a href="#输入与输出" class="headerlink" title="输入与输出"></a>输入与输出</h1><h2 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h2><p>文件描述符一般为小的非负整数，内核使用它来识别进程获取需要获取的文件。无论何时要打开一个存在的文件或创建一个新的文件，内核都会返回一个文件描述符让我们用于读写文件。</p>
+<h2 id="标准输入，标准输出，和标准错误"><a href="#标准输入，标准输出，和标准错误" class="headerlink" title="标准输入，标准输出，和标准错误"></a>标准输入，标准输出，和标准错误</h2><p>为了方便，当一个新的项目运行时，所有的shell都会打开三个描述符：标准输入，标准输出，和标准错误，如果没有特殊处理，例如单纯执行指令ls，然后这三个描述符都会连接到控制台，大部分shell都会提供一个重定向部分或所有三个描述符到文件，例如 ls &gt; file.list 执行该指令会使结果输出到file.list。</p>
+<h2 id="无缓冲IO"><a href="#无缓冲IO" class="headerlink" title="无缓冲IO"></a>无缓冲IO</h2><p>无缓冲IO通过函数open,read,write,lseek和close，这些函数均通过文件描述符来运行。<br>例如我们想要从标准输入读然后写到标准输出，通过这种方式来复制文件如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFFSIZE 4096</span></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">int</span> n;</span><br><span class="line"><span class="keyword">char</span> buf[BUFFSIZE];</span><br><span class="line"><span class="keyword">while</span> ((n = <span class="built_in">read</span>(STDIN_FILENO, buf, BUFFSIZE)) &gt; <span class="number">0</span>)</span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">write</span>(STDOUT_FILENO, buf, n) != n)</span><br><span class="line">err_sys(<span class="string">"write error"</span>);</span><br><span class="line"><span class="keyword">if</span> (n &lt; <span class="number">0</span>)</span><br><span class="line">err_sys(<span class="string">"read error"</span>);</span><br><span class="line"><span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>read,write等函数位于&lt;unistd.h&gt;文件，该文件在apue.h中有包含，两个常量STDIN_FILENO和STDOUT_FILENO为POSIX（简易操作系统）标准中的内容，这两个常量在&lt;unistd.h&gt;中有定义用于指定文件描述符为标准输入和标准输出。他们的值为0和1。</p>
+<p>read函数返回读取到的字节数，这个值作为write函数写入的字节数，当读到输入文件的结尾时，该函数返回0，如果发生错误，则返回-1，如果我们编译了该函数，生成了（a.out），则可如下执行</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./a.out &gt; data</span><br></pre></td></tr></table></figure>
+
+<p>标准输入为终端，标准输出重定向到文件data。标准错误也为终端。如果输出文件不存在，shell会自动创建一个文件，然后复制我们输入到终端的内容到data。当输入（crtl+D）时结束输入。<br>执行如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:/home/<span class="built_in">test</span>/chapter1<span class="comment"># ./a.out &gt; data</span></span><br><span class="line">hello world                 //crtl+D结束输入</span><br><span class="line">root@ubuntu:/home/<span class="built_in">test</span>/chapter1<span class="comment"># cat data</span></span><br><span class="line">hello world</span><br><span class="line">root@ubuntu:/home/<span class="built_in">test</span>/chapter1<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<p>如果我们运行./a.out &lt; infile &gt; outfile则文件由infile复制到outfile。</p>
+<h2 id="标准IO"><a href="#标准IO" class="headerlink" title="标准IO"></a>标准IO</h2><p>标准IO为没有缓冲的IO函数提供了一个缓冲接口，使用标准IO可以解除我们选择最佳缓存大小的烦恼上个例子中的BUFFSIZE，标准IO函数简化了对输入行的处理，例如fgets函数会读取一整行，而read函数相反，只能读取一定长度字节，标准IO库提供了让我们控制字符格式的函数。最常用的标准IO函数为printf，其位于&lt;stdio.h&gt;文件中。</p>
+<h3 id="实例-1"><a href="#实例-1" class="headerlink" title="实例"></a>实例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> c;</span><br><span class="line">    <span class="keyword">while</span> ((c = getc(<span class="built_in">stdin</span>)) != EOF)</span><br><span class="line">        <span class="keyword">if</span> (putc(c, <span class="built_in">stdout</span>) == EOF)</span><br><span class="line">            err_sys(<span class="string">"output error"</span>);</span><br><span class="line">        <span class="keyword">if</span> (ferror(<span class="built_in">stdin</span>))</span><br><span class="line">            err_sys(<span class="string">"input error"</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>函数getc每次读取一个字符，这个字符通过putc来写，当最后一个字符被读取后，getc将会返回标准EOF，标准IO常量stdin和stdout也在头文件&lt;stdio.h&gt;中有定义表示标准输入和标准输出。</p>
+<h1 id="程序与进程"><a href="#程序与进程" class="headerlink" title="程序与进程"></a>程序与进程</h1><h2 id="程序"><a href="#程序" class="headerlink" title="程序"></a>程序</h2><p>一个程序就是一个目录中位于磁盘中的可执行文件，程序被读到内容中，然后被内核执行。</p>
+<h2 id="进程和进程ID"><a href="#进程和进程ID" class="headerlink" title="进程和进程ID"></a>进程和进程ID</h2><p>一个正在执行的程序被称为一个进程（process），进程是一个术语，有时我们也称一个进程就是一个任务（task），UNIX系统保证每一个进程有一个独特的数字标识被称作进程ID，进程ID一般为一个非负整数。</p>
+<h2 id="实例-2"><a href="#实例-2" class="headerlink" title="实例"></a>实例</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"hello world from process ID %ld\n"</span>, (<span class="keyword">long</span>)getpid());</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ./a.out</span><br><span class="line">hello world from process ID 851</span><br><span class="line">$ ./a.out</span><br><span class="line">hello world from process ID 854</span><br></pre></td></tr></table></figure>
+
+<p>当程序在运行时，调用函数getpid来获取进程ID。</p>
+<h2 id="进程控制"><a href="#进程控制" class="headerlink" title="进程控制"></a>进程控制</h2><p>进程控制有三个基本函数：fork,exec,和waitpid（exec函数有7个变体，但我们一般仅使用它的集合体exec）。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>下面一个从标准输入读取指令并执行指令的简单函数演示了UNIX系统的进程控制特性。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">char</span> buf[MAXLINE]; <span class="comment">/* from apue.h */</span></span><br><span class="line">    <span class="keyword">pid_t</span> pid;</span><br><span class="line">    <span class="keyword">int</span> status;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%% "</span>); <span class="comment">/* print prompt (printf requires %% to print %) */</span></span><br><span class="line">    <span class="keyword">while</span> (fgets(buf, MAXLINE, <span class="built_in">stdin</span>) != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (buf[<span class="built_in">strlen</span>(buf) - <span class="number">1</span>] == ’\n’)</span><br><span class="line">            buf[<span class="built_in">strlen</span>(buf) - <span class="number">1</span>] = <span class="number">0</span>; <span class="comment">/* replace newline with null */</span></span><br><span class="line">        <span class="keyword">if</span> ((pid = fork()) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            err_sys(<span class="string">"fork error"</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123; <span class="comment">/* child */</span></span><br><span class="line">            execlp(buf, buf, (<span class="keyword">char</span> *)<span class="number">0</span>);</span><br><span class="line">            err_ret(<span class="string">"couldn’t execute: %s"</span>, buf);</span><br><span class="line">            <span class="built_in">exit</span>(<span class="number">127</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/* parent */</span></span><br><span class="line">        <span class="keyword">if</span> ((pid = waitpid(pid, &amp;status, <span class="number">0</span>)) &lt; <span class="number">0</span>)</span><br><span class="line">            err_sys(<span class="string">"waitpid error"</span>);</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%% "</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们使用标准IO函数fgets来从标准输入读取一行数据，当我们检测到第一个字符为EOF（crtl+D）时，会返回一个空指针。</p>
+<p>由于fgets每一个行返回值的最后一个字符为换行符，所以我们将他换为空字符。</p>
+<p>我们调用fork来创建一个新的进程，创建的进程为目前进程的复制版本，我们称调用者为父进程，新创建的为子进程，然后fork返回一个子进程的非负的进程ID，并对子进程返回一个0.由于fork创建了一个新的进程，所以我们称函数调用了一次（通过父进程）但是返回了两次（子进程与父进程）。</p>
+<p>在子进程中，我们掉用execlp来执行我们从标准输入中读取到的命令，新的程序文件会替换掉子程序，fork函数后面跟随exec函数的组合被称为在一些正在运行的程序上增生新的进程，在UNIX系统中，这两部分被分成两个不同函数，以后会详解介绍。</p>
+<p>由于子进程调用execlp去执行新的程序文件，父进程想要等待子进程结束，这个通过函数waitpid来实现，该函数通过指定进程ID来指定等待的进程，该函数也会返回子进程的终止状态（statue）.</p>
+<p>这个程序最基础的限制是我们不能给指令传递参数。<br>运行结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:/home/<span class="built_in">test</span>/chapter1<span class="comment"># ./a.out</span></span><br><span class="line">% date</span><br><span class="line">Wed Dec  4 14:17:31 CST 2019</span><br><span class="line">% ls</span><br><span class="line">commend  commend.c  cpp  cpp.c	data  lss  lss.c</span><br><span class="line">% <span class="built_in">pwd</span></span><br><span class="line">/home/<span class="built_in">test</span>/chapter1</span><br><span class="line">% root@ubuntu:/home/<span class="built_in">test</span>/chapter1<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="线程与线程ID"><a href="#线程与线程ID" class="headerlink" title="线程与线程ID"></a>线程与线程ID</h2><p>通常情况下，一个进程由一个线程控制。一些程序在多线程控制情况下更容易运行，另外，多线程控制在多处理器系统中有着更好的效率。<br>一个进程中的所有线程共享相同的地址空间，文件描述符，栈和进程相关参数。每一个线程在自己的堆栈上执行，尽管任何一个线程都可以获取相同的内存。<br>和进程相似，线程也通过ID来识别，线程ID位于进程中，一个进程中的线程ID对于另一个进程来说没有任何意义。</p>
+<h1 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h1><p>当UNIX系统函数中有错误发生时总会返回一个负数，并且整型数errno总是会被设置为一个值来说明发生错误的原因，例如open函数返回一个非负整数表示一切OK，或者当错误发生时返回-1，open函数有15个可能errno值。例如文件不存在，权限不允许等。一些函数使用一定规则而不是返回一个负数，例如当有错误发生时函数返回一个指向空的指针。<br>文件&lt;errno.h&gt;定义了符号errno以及errno可以指定的常量，这些常量都是以字符E来开头，<br>当工作在一个支持线程的环境中，进程地址空间是被多个线程共享的，所以每一个线程需要它自己的errno的副本来防止互相的干扰。Linux通过如下定义来支持对errno的多线程接口</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> *_ _errno_location(<span class="keyword">void</span>);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> errno (*_ _errno_location())</span></span><br></pre></td></tr></table></figure>
+
+<p>关于errno有两个需要知道的规则，第一，一个错误没有发生时，它的值永远不会被常规程序清楚。因此我们应该只有在函数返回的值表明错误发生时才检测这个值。第二，errno永远不会被任何一个函数设置为0，&lt;errno.h&gt;中定义的常量没有0.</p>
+<p>有两个函数来帮助打印错误信息如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">char</span> *<span class="title">strerror</span><span class="params">(<span class="keyword">int</span> errnum)</span></span>;</span><br><span class="line">            Returns: pointer to message <span class="built_in">string</span></span><br></pre></td></tr></table></figure>
+
+<p>errnum表示errno的值。返回值为错误信息字符串。</p>
+<p>perror函数基于目前errno的值在标准错误上产生一个错误信息，并且返回。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">perror</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *msg)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>它将会输出一个msg的字符串后跟着冒号和一个空格以及errno相关联的错误信息</p>
+<h2 id="例子-1"><a href="#例子-1" class="headerlink" title="例子"></a>例子</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"EACCES: %s\n"</span>, strerror(EACCES));</span><br><span class="line">    errno = ENOENT;</span><br><span class="line">    perror(argv[<span class="number">0</span>]);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./a.out</span><br><span class="line">EACCES: Permission denied</span><br><span class="line">./a.out: No such file or directory</span><br></pre></td></tr></table></figure>
+
+<p>这是由于EACCES表示权限不够错误，ENOENT表示文件不存在错误。</p>
+<h2 id="错误恢复"><a href="#错误恢复" class="headerlink" title="错误恢复"></a>错误恢复</h2><p>在&lt;errno.h&gt;中定义的错误可以分为两个类别，致命的和非致命的。一个致命错误没有恢复的行为。我们能做的最好行为是把错误信息打印出来，然后退出。非致命错误，有时可以使用更粗暴的方式来处理掉。大部分非致命错误都是暂时的，例如资源短缺等。<br>资源相关非致命错误包括EAGAIN,ENFILE,ENOBUFS,ENOLCK,ENOSPC,EWOULDBLOCK,以及有时ENOMEM,EBASY当在一个共享资源被使用时被认为为非致命错误。典型的对于资源相关非致命错误的恢复方式是延时并且之后重试。</p>
+<h1 id="用户识别"><a href="#用户识别" class="headerlink" title="用户识别"></a>用户识别</h1><h2 id="用户ID"><a href="#用户ID" class="headerlink" title="用户ID"></a>用户ID</h2><p>用户ID主要用于系统识别不同用户，它存储在password文件中，当我们注册的名字被分配的同时会分配一个用户ID，这个用户ID不可更改，对每一个用户唯一，内核使用用户ID来检查对文件是否有各种权限。我们称用户ID为0的用户为root或超级用户（superuser），在password文件正常情况下有一个为root的注册名，我们给这个用于超级用户的权限，</p>
+<h2 id="群组ID"><a href="#群组ID" class="headerlink" title="群组ID"></a>群组ID</h2><p>password文件也指定了我们的数字群组ID，它也是在我们注册的名称被分配时被管理员分配。代表性的是password文件给不同登入者指定相同的群组ID。群组用于统一管理用户，例如文件资源的共享等。<br>在/etc/中也有一个group文件来把群组名映射到群组ID。</p>
+<h2 id="例子-2"><a href="#例子-2" class="headerlink" title="例子"></a>例子</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"uid = %d, gid = %d\n"</span>, getuid(), getgid());</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="群组ID的补充"><a href="#群组ID的补充" class="headerlink" title="群组ID的补充"></a>群组ID的补充</h2><p>在大部分版本的UNIX系统中，允许一个用户属于其他群组。</p>
+<h1 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h1><p>信号是一个用于通知一个进程一些情况发生的技巧，例如如果一个进程被0分开了，一个名称为SIGFPE的信号就会被发送到这个进程，该进程对于这个信号有如下三种处理方式。<br>1，忽略信号<br>2，让默认行为发生，对于上述情况的默认行为为终止这个进程。<br>3，提供一个函数当信号发生时将会被调用，通过提供一个我们自己的函数来处理这个信号。</p>
+<p>有很多情况产生信号，两种终端按键，一般使用DELETE键或crtl+c来调用打断功能，或调用crtl+/来调用暂停。</p>
+<h2 id="例子-3"><a href="#例子-3" class="headerlink" title="例子"></a>例子</h2><p>当我们调用该程序然后按下打断按键，进程就会终止，因为对于这个信号（SIGINT）的默认行为为终止进程。<br>为了捕捉到这个信号，进程需要调用signal函数，指定当发生SIGINT信号时需要调用的函数名称，这个函数命名为sig_int；当被调用时，它进打印一个信息和一个新的提示。带加号的为在默认情况下添加的内容。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">    <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line">+   <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sig_int</span><span class="params">(<span class="keyword">int</span>)</span></span>; <span class="comment">/* our signal-catching function */</span></span><br><span class="line">+</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">char</span> buf[MAXLINE]; <span class="comment">/* from apue.h */</span></span><br><span class="line">        <span class="keyword">pid_t</span> pid;</span><br><span class="line">        <span class="keyword">int</span> status;</span><br><span class="line">+       <span class="keyword">if</span> (signal(SIGINT, sig_int) == SIG_ERR)</span><br><span class="line">+           err_sys(<span class="string">"signal error"</span>);</span><br><span class="line">+</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%% "</span>); <span class="comment">/* print prompt (printf requires %% to print %) */</span></span><br><span class="line">        <span class="keyword">while</span> (fgets(buf, MAXLINE, <span class="built_in">stdin</span>) != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (buf[<span class="built_in">strlen</span>(buf) - <span class="number">1</span>] == ’\n’)</span><br><span class="line">                buf[<span class="built_in">strlen</span>(buf) - <span class="number">1</span>] = <span class="number">0</span>; <span class="comment">/* replace newline with null */</span></span><br><span class="line">            <span class="keyword">if</span> ((pid = fork()) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                err_sys(<span class="string">"fork error"</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123; <span class="comment">/* child */</span></span><br><span class="line">                execlp(buf, buf, (<span class="keyword">char</span> *)<span class="number">0</span>);</span><br><span class="line">                err_ret(<span class="string">"couldn’t execute: %s"</span>, buf);</span><br><span class="line">                <span class="built_in">exit</span>(<span class="number">127</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        <span class="comment">/* parent */</span></span><br><span class="line">        <span class="keyword">if</span> ((pid = waitpid(pid, &amp;status, <span class="number">0</span>)) &lt; <span class="number">0</span>)</span><br><span class="line">            err_sys(<span class="string">"waitpid error"</span>);</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%% "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">+</span><br><span class="line">+   <span class="keyword">void</span></span><br><span class="line">+   sig_int(<span class="keyword">int</span> signo)</span><br><span class="line">+   &#123;</span><br><span class="line">+       <span class="built_in">printf</span>(<span class="string">"interrupt\n%% "</span>);</span><br><span class="line">+   &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="系统调用与库函数"><a href="#系统调用与库函数" class="headerlink" title="系统调用与库函数"></a>系统调用与库函数</h1><p>UNIX系统使用的技巧是对于每一个系统调用在标准C中都有相同名称的函数。用户进程使用标准C来调用这些函数，这些函数然后调用适当的内核服务，具体使用什么内核服务取决于系统。例如，函数可以将一个或多个参数放到通用寄存器，然后执行一些机器指令来在内核中产生一个软件软件中断。对于我们的目的，我们可以考虑将系统调用为C函数。<br>从实施者的角度来看，系统调用与一个库函数的区别仅在于基本理论的区别。从一个用户角度来看，二者并没有矛盾，从我们角度来看，系统调用和库函数都是作为正常C函数出现，二者就是为了应用层提供服务。我们可以实现或我们可以替换掉库函数，然而，系统调用函数一般不能被替换。<br>我们来以内存分配函数malloc为例，有很多方法实现内存分配和它相关的垃圾收集。并没有哪一中方法对于所有程序都是最佳方法。UNIX系统调用内存分配句柄sbrk并不是一个通用目的的内存管理。它可以增加或降低一个指定字节数的进程地址空间。至于空间具体怎么管理取决于进程。内存分配函数malloc实施了一个特殊类型的分配方式。它可能会调用sbrk。事实上，许多软件包在实施他们的内存分配时都会调用sbrk系统回调。下图展示了他们间的关系。<br><img src="/assets/malloc%E4%B8%8Esbrk.png" alt="malloc and sbrk"><br>在这我们就有了一个清晰的责任划分，内核的系统调用代表进程分配额外的空间。malloc库函数从用户层管理这些空间。</p>
+<p>另一个阐明系统调用和库函数调用的不同的是UNIX系统提供的目前时间与日期的接口，一些操作系统提供一个系统调用来返回时间。当有任一特殊处理，例如夏令时的转换需要他同古内核处理或人工转换，UNIX系统相反，提供一个第一系统调用来返回新纪元经过的秒数，所有将这个数据转化为便于读的时间的方法都留给用户进程。因此一个应用程序即可以调用系统回调来获取时间也可以调用一个库函数，库函数中通过掉用系统回调来获取底层时间，他们间的关系如下图所示：<br><img src="/assets/C%E5%BA%93%E4%B8%8E%E7%B3%BB%E7%BB%9F%E5%9B%9E%E8%B0%83.png" alt="C库与系统回调"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -196,57 +281,106 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" target="_blank" rel="noopener" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" target="_blank" rel="noopener" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;" target="_blank" rel="noopener"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/12/04/UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-System-Overview-%E4%B8%80/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/12/04/uinx%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80/" class="archive-article-date">
-  	<time datetime="2019-12-04T01:43:35.437Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-04</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/12/04/uinx%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">uinx环境高级编程源码下载地址</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/12/04/uinx%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80/">uinx环境高级编程源码下载地址</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">LINUX</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -269,9 +403,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
