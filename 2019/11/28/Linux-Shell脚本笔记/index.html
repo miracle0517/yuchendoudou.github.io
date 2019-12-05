@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="yuchen blog">
 <meta property="og:description" content="本文主要关于一些常用的Shell脚本指令">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-12-04T01:50:39.414Z">
+<meta property="og:updated_time" content="2019-12-05T06:06:07.259Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="yuchen blog" type="application/atom+xml">
@@ -180,7 +180,7 @@
         <p>本文主要关于一些常用的Shell脚本指令</p>
 <a id="more"></a>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">'条件类型1（动作1） 条件类型2（动作2） ...'</span> filename</span><br><span class="line">例如：</span><br><span class="line">cp -f `<span class="built_in">echo</span> <span class="variable">$file</span> | awk -F: <span class="string">'&#123;print $1&#125;'</span>` `<span class="built_in">echo</span> <span class="variable">$file</span> | awk -F: <span class="string">'&#123;print $2&#125;'</span>` 2&gt;/dev/null <span class="variable">$file</span>的内容为bl31.bin:monitor.fex   则该指令表示将bl31.bin内容复制到monitor.fex。（-F表示指定分隔符，默认为空格，<span class="variable">$1</span>表示分割后的第一列，<span class="variable">$0</span>表示一整行，<span class="variable">$NF</span>表示最后一列。</span><br><span class="line"></span><br><span class="line">cp -rf  复制所有目录以及目录内文件，-f表示覆盖已经存在文件而没有提示</span><br><span class="line"></span><br><span class="line">mv -Tf 更改文件夹名字。</span><br><span class="line"></span><br><span class="line">rm -rf  强制删除目录以及目录内所有内容</span><br><span class="line"></span><br><span class="line">fdisk -l 列出所有分区，包括没有挂载的设备分区</span><br><span class="line"></span><br><span class="line">df -T   显示所有文件系统</span><br><span class="line"></span><br><span class="line">vim中crtl+s表阻止接下来的写入，使用crtl+q可解除</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">'条件类型1（动作1） 条件类型2（动作2） ...'</span> filename</span><br><span class="line">例如：</span><br><span class="line">cp -f `<span class="built_in">echo</span> <span class="variable">$file</span> | awk -F: <span class="string">'&#123;print $1&#125;'</span>` `<span class="built_in">echo</span> <span class="variable">$file</span> | awk -F: <span class="string">'&#123;print $2&#125;'</span>` 2&gt;/dev/null <span class="variable">$file</span>的内容为bl31.bin:monitor.fex   则该指令表示将bl31.bin内容复制到monitor.fex。（-F表示指定分隔符，默认为空格，<span class="variable">$1</span>表示分割后的第一列，<span class="variable">$0</span>表示一整行，<span class="variable">$NF</span>表示最后一列。</span><br><span class="line"></span><br><span class="line">cp -rf  复制所有目录以及目录内文件，-f表示覆盖已经存在文件而没有提示</span><br><span class="line"></span><br><span class="line">mv -Tf 更改文件夹名字。</span><br><span class="line"></span><br><span class="line">rm -rf  强制删除目录以及目录内所有内容</span><br><span class="line"></span><br><span class="line">fdisk -l 列出所有分区，包括没有挂载的设备分区</span><br><span class="line"></span><br><span class="line">df -T   显示所有文件系统</span><br><span class="line"></span><br><span class="line">vim中crtl+s表阻止接下来的写入，使用crtl+q可解除</span><br><span class="line"></span><br><span class="line">od -c filename 显示文件各偏移处存储内容。</span><br></pre></td></tr></table></figure>
 
 <p>dd指令  转自<a href="https://www.cnblogs.com/yuanqiangfei/p/9138625.html" target="_blank" rel="noopener">dd命令的解释</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">dd：用指定大小的块拷贝一个文件，并在拷贝的同时进行指定的转换。</span><br><span class="line">注意：指定数字的地方若以下列字符结尾，则乘以相应的数字：b=512；c=1；k=1024；w=2</span><br><span class="line">参数注释：</span><br><span class="line">1. <span class="keyword">if</span>=文件名：输入文件名，缺省为标准输入。即指定源文件。&lt; <span class="keyword">if</span>=input file &gt;</span><br><span class="line">2. of=文件名：输出文件名，缺省为标准输出。即指定目的文件。&lt; of=output file &gt;</span><br><span class="line">3. ibs=bytes：一次读入bytes个字节，即指定一个块大小为bytes个字节。</span><br><span class="line">    obs=bytes：一次输出bytes个字节，即指定一个块大小为bytes个字节。</span><br><span class="line">    bs=bytes：同时设置读入/输出的块大小为bytes个字节。</span><br><span class="line">4. cbs=bytes：一次转换bytes个字节，即指定转换缓冲区大小。</span><br><span class="line">5. skip=blocks：从输入文件开头跳过blocks个块后再开始复制。</span><br><span class="line">6. seek=blocks：从输出文件开头跳过blocks个块后再开始复制。</span><br><span class="line">注意：通常只用当输出文件是磁盘或磁带时才有效，即备份到磁盘或磁带时才有效。</span><br><span class="line">7. count=blocks：仅拷贝blocks个块，块大小等于ibs指定的字节数。</span><br><span class="line">8. iflag=flag  或  oflag=flag  ：用flag控制输入输出，flag一般为dsync表示读写数据采用同步IO</span><br><span class="line">9. conv=conversion：用指定的参数转换文件。</span><br><span class="line">    ascii：转换ebcdic为ascii</span><br><span class="line">     ebcdic：转换ascii为ebcdic</span><br><span class="line">    ibm：转换ascii为alternate ebcdic</span><br><span class="line">    block：把每一行转换为长度为cbs，不足部分用空格填充</span><br><span class="line">    unblock：使每一行的长度都为cbs，不足部分用空格填充</span><br><span class="line">    lcase：把大写字符转换为小写字符</span><br><span class="line">    ucase：把小写字符转换为大写字符</span><br><span class="line">    swab：交换输入的每对字节</span><br><span class="line">     noerror：出错时不停止</span><br><span class="line">     notrunc：不截短输出文件</span><br><span class="line">    sync：将每个输入块填充到ibs个字节，不足部分用空（NUL）字符补齐。</span><br></pre></td></tr></table></figure>
@@ -403,19 +403,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">LINUX</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">Shell Script</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">u-boot</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">LINUX</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">u-boot</a>
               </li>
             
             <div class="clearfix"></div>

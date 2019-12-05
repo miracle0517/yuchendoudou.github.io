@@ -6,18 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>u-boot学习笔记-基本指令 | yuchen blog</title>
+  <title>UNIX环境高级编程学习笔记 文件IO | yuchen blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="本文主要关于ARMV8架构汇编的一些常用指令。">
-<meta name="keywords" content="u-boot">
+  <meta name="description" content="本文主要关于UNIX环境高级编程中第三章文件IO相关内容，主要相关函数open,read,write,lseek,close,dup,fcntl,sync,fsync,ioctl。">
+<meta name="keywords" content="LINUX">
 <meta property="og:type" content="article">
-<meta property="og:title" content="u-boot学习笔记-基本指令">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;19&#x2F;u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0&#x2F;index.html">
+<meta property="og:title" content="UNIX环境高级编程学习笔记 文件IO">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;05&#x2F;UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO&#x2F;index.html">
 <meta property="og:site_name" content="yuchen blog">
-<meta property="og:description" content="本文主要关于ARMV8架构汇编的一些常用指令。">
+<meta property="og:description" content="本文主要关于UNIX环境高级编程中第三章文件IO相关内容，主要相关函数open,read,write,lseek,close,dup,fcntl,sync,fsync,ioctl。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-22T07:36:48.960Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assert&#x2F;UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO&#x2F;file.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assert&#x2F;UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO&#x2F;twofile.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assert&#x2F;UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO&#x2F;dup.png">
+<meta property="og:updated_time" content="2019-12-05T09:38:29.093Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assert&#x2F;UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO&#x2F;file.png">
   
     <link rel="alternative" href="/atom.xml" title="yuchen blog" type="application/atom+xml">
   
@@ -157,32 +161,198 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-u-boot学习笔记" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-UNIX环境高级编程学习笔记-文件IO" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      u-boot学习笔记-基本指令
+      UNIX环境高级编程学习笔记 文件IO
     </h1>
   
 
         
-        <a href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="archive-article-date">
-  	<time datetime="2019-11-19T01:01:13.308Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-19</time>
+        <a href="/2019/12/05/UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO/" class="archive-article-date">
+  	<time datetime="2019-12-05T01:58:16.562Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-05</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>本文主要关于ARMV8架构汇编的一些常用指令。</p>
+        <p>本文主要关于UNIX环境高级编程中第三章文件IO相关内容，主要相关函数open,read,write,lseek,close,dup,fcntl,sync,fsync,ioctl。</p>
 <a id="more"></a>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>我们先描述关于文件IO相关的函数，打开一个文件，读取一个文件，写入文件等，在UNIX系统上的大部分文件IO仅使用5个函数即可：open,read,write,lseek和close。本章相关文件IO函数一般为无缓冲IO。<br>无论何时我们在多个进程间描述共享资源时，原子操作的概念变得尤为重要。关于如何处理共享文件我们将会描述dup,fcntl,sync,fsync和ioctl函数。</p>
+<h1 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h1><p>对于内核，所有打开的文件都通过文件描述符来描述，一个文件描述符是一个非负整数，当我们打开一个已经存在的文件或创建一个新的文件，我们把open或creat返回的文件描述符来作为read或write的参数。<br>根据惯例约定，UNIX系统shell把文件描述符0关联到标准输入，文件描述符1关联到标准输出，文件描述符2关联到标准错误。<br>尽管他们的值都在POSIX.1中有规定，<strong>$\color{yellow}{但在符合POSIX规定的应用中幻数0，1，2应该被符号常量STDIN_FILENO,STDOUT_FILENO和STDERR_FILENO替代来提高可读性。这些内容定义在&lt;unist.d&gt;头文件}$</strong></p>
+<p><strong>$\color{red}{文件描述符与进程相关联，同一个文件在两个独立进程中可以有不同描述符}$</strong></p>
+<p>文件描述符的范围从0到OPEN_MAX-1。</p>
+<h1 id="open和openat函数"><a href="#open和openat函数" class="headerlink" title="open和openat函数"></a>open和openat函数</h1><p>调用open或openat函数可以打开或创建一个文件。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">open</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *path, <span class="keyword">int</span> oflag, ... <span class="comment">/* mode_t mode */</span> )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">openat</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">const</span> <span class="keyword">char</span> *path, <span class="keyword">int</span> oflag, ... <span class="comment">/* mode_t mode */</span> )</span></span>;</span><br></pre></td></tr></table></figure>
 
-<h1 id="相关汇编指令"><a href="#相关汇编指令" class="headerlink" title="相关汇编指令"></a>相关汇编指令</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">MRS 通用寄存器，程序状态寄存器（CPSR或SPSR）    //该指令用于将程序状态寄存器的内容传送到通用寄存器</span><br><span class="line"></span><br><span class="line">MSR 程序状态寄存器 操作数       //该指令用于将操作数内容传送到程序状态寄存器</span><br><span class="line"></span><br><span class="line">adr 通用寄存器 指令地址     //该指令用于将指令的当前地址传输到通用寄存器，程序放的位置变化时，则指令的当前地址也会变化，与下面指令相对应</span><br><span class="line"></span><br><span class="line">ldr 通用寄存器 =指令地址    //该指令用于将指令的绝对地址传输到通用寄存器，绝对地址是在程序链接时已经确定的，表示相对于程序起始地址，目前指令的地址。</span><br><span class="line"></span><br><span class="line">str 通用寄存器 地址			//该指令用于将通用寄存器中数据传到内存中</span><br><span class="line"></span><br><span class="line">ORR 目的寄存器，操作数1，操作数2    //该指令用于将两个操作数进行逻辑或运算，并将结果放到目的寄存器，操作数一应为一个寄存器。操作数二可以不为寄存器。</span><br><span class="line"></span><br><span class="line">mov 寄存器，操作数  //该指令将操作数移动到寄存器中，可以移动立即数。</span><br><span class="line"></span><br><span class="line">B       //直接跳转指令。</span><br><span class="line"></span><br><span class="line">BL      //带链接跳转，使用该指令时在跳转时会将当前指令的下一条指令存储在lr寄存器中，然后跳转，主要为了调用子程序，在子程序执行完后返回当前位置继续执行。</span><br><span class="line"></span><br><span class="line">CBZ 操作数1，操作数2    //若操作数1为0则跳转到操作数2地址。</span><br><span class="line"></span><br><span class="line">CBNZ 操作数1，操作数2   //若操作数1非零则跳转到操作数2地址执行。</span><br><span class="line"></span><br><span class="line">WFE     进入低功耗睡眠指令，当当前内核无法获取到资源时可以调用该指令进入低功耗模式来等待资源</span><br><span class="line"></span><br><span class="line">ret     //推出目前程序指令，该指令会从lr或直接从栈中取出进入该子程序前将要执行的下一条指令的地址，具体从lr还是从栈中取出地址根据进入子程序执行的指令有关，采用call调用子程序，则推出子程序时从栈中取地址，采用bl则从lr中取地址。</span><br></pre></td></tr></table></figure>
+<p>返回文件描述符表示OK，-1表示错误。<br>最后一个参数为…，它在ISO C表示剩下的参数的数目或类型不固定。对于这两个函数，最后的参数只有当一个新文件被创建时才会被使用。我们在原型中显示这个参数作为注释。<br>$\color{yellow}{path}$参数表示需要打开或创建的文件的名称，这个函数通过$\color{yellow}{oflag}$来指定多种选择。该参数由下面多个参数相或来指定。下面的参数均在&lt;fcntl.h&gt;中有定义。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">O_RDONLY    只读</span><br><span class="line">O_WRONLY    只写</span><br><span class="line">O_RDWR      只读写</span><br></pre></td></tr></table></figure>
 
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">O_EXEC      只执行</span><br><span class="line">O_SEARCH    只搜索（仅对目录有效）</span><br></pre></td></tr></table></figure>
 
+<p>O_SEARCH目的在于在目录打开时验证它的搜索权限，对目录的文件按描述符的后续操作不需要再次检查该目录搜索权限，LINUX不支持O_SEARCH<br>在上面的5个常量中必须指定一个并且只能指定一个，下面的常量为可选的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">O_APPEND    在写入时从文件的最后开始写。</span><br><span class="line"></span><br><span class="line">O_CLOEXEC   将文件描述符标志位设置为FD_CLOEXEC后面有讲</span><br><span class="line"></span><br><span class="line">O_CREAT     如果文件不存在则创建一个文件，这个选项需要第三个参数（对于<span class="built_in">open</span>函数）或第四个参数（对于openat函数）--mode参数，该参数用于指定新文件的权限。</span><br><span class="line"></span><br><span class="line">O_DIRECTORY 如果path指向的不为目录则产生一个错误。</span><br><span class="line"></span><br><span class="line">O_EXCL      如果O_CREAT也指定了但是文件已经存在，则产生一个错误，它用于测试文件是否存在与创建文件组合成一个原子操作。</span><br><span class="line"></span><br><span class="line">O_NOCTTY    如果path指向一个终端设备，则不为该进程将终端设备分配为控制终端。</span><br><span class="line"></span><br><span class="line">O_NOFOLLOW  如果path指向一个符号链接，则产生一个错误</span><br><span class="line"></span><br><span class="line">O_NONBLOCK  如果path指向一个FIFO或一个块设备或一个字符特殊设备，这个选择会将接下来打开的文件和后续的IO设置为非阻塞操作。</span><br><span class="line"></span><br><span class="line">O_SYNC      使每次<span class="built_in">write</span>都等待IO完成，包括IO相关的文件属性修改。</span><br><span class="line"></span><br><span class="line">O_TRUNC     如果文件存在并且成功以只读或只读写方式打开，则将它的长度截断为<span class="number">0</span>。</span><br><span class="line"></span><br><span class="line">O_TTY_INIT  当打开一个没有打开的终端设备，则设置非标准termios参数的值。</span><br></pre></td></tr></table></figure>
+
+<p>下面两个标志为可选标志，他们为POSIX.1中同步输入和输出选项的一部分。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">O_DSYNC     每次写都等待IO完成，如果文件属性更新不影响读写数据，则不等待文件属性更新。</span><br><span class="line"></span><br><span class="line">O_RSYNC     每次读操作都等待所有对该文件挂起的写操作的完成。</span><br></pre></td></tr></table></figure>
+
+<p>open和openat返回的文件描述符一定为未使用的文件描述符中最小的。<br>$\color{yellow}{fd}$参数将openat函数从open函数区分开，下面有三种可能行：<br>1，path参数指定了一个绝对路径，在这种情况下，fd参数会被忽略，openat函数行为与open函数类似。<br>2，path参数指定了一个相对路径，fd参数就是相对路径的起始目录的描述符。fd通过打开目录就可以获取到。<br>3，path指定了一个相对路径，并且fd参数为特殊值AT_FDCWD,在这种情况下，相对路径起始于当前工作目录，openat函数功能与open类似。</p>
+<p>openat函数一类函数中为了解决两个问题才添加到最近版本的POSIX.1，第一，它给了线程一种方式来打开相对路径目录文件，而不是只能打开当前工作目录。第二，它提供了一种方式来避免time-of-check-to-time-of-use(TOCTTOU)错误。<br>TOCTTOU的基本思想是：如果有一个基于两个文件调用的函数，当第二个函数取决于第一个函数的结果时是易受到攻击的，因为两个调用并不是原子操作，因此文件可能在两个操作之间发生更改，这样就导致第二次文件调用的结果为错误的。文件系统命名空间中的TOCTTOU错误通常处理为通过骗取特权程序降低特权文件权限控制或者让特权文件打开一个安全漏洞方式进行。</p>
+<h1 id="creat-函数"><a href="#creat-函数" class="headerlink" title="creat 函数"></a>creat 函数</h1><p>该函数主要用于创建一个文件</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">creat</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *path, <span class="keyword">mode_t</span> mode)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>返回文件描述符且以只读模式打开，则表示OK，-1表示错误。<br>它等效于下面函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">open</span>(path, O_WRONLY | O_CREAT | O_TRUNC, mode);</span><br></pre></td></tr></table></figure>
+
+<p>creat函数的一个缺陷是打开方式为只写方式。所以如果我们想要使用cteat创建一个文件，然后写入再读出，则实际执行需要，creat,close,open…这导致操作繁琐，因此我们一般使用open函数如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">open</span>(path, O_RDWR | O_CREAT | O_TRUNC, mode);</span><br></pre></td></tr></table></figure>
+
+<h1 id="close-函数"><a href="#close-函数" class="headerlink" title="close 函数"></a>close 函数</h1><p>调用close函数关闭文件。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">close</span><span class="params">(<span class="keyword">int</span> fd)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>返回0表示成功，-1表示错误。<br>关闭文件可以释放该进程添加的记录锁。当一个进程结束时所有打开的文件会被自动关闭。</p>
+<h1 id="lseek-函数"><a href="#lseek-函数" class="headerlink" title="lseek 函数"></a>lseek 函数</h1><p>每一个打开的文件都有一个相关联的“当前文件偏移量”（current file offset），它表示当前文件的指针所在的位置与文件起始位置的偏移字节数。读写文件都是从当前文件偏移处进行的，默认当文件刚打开时起始为0，除非O_APPEND选项指定。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">off_t</span> lseek(<span class="keyword">int</span> fd, <span class="keyword">off_t</span> offset,<span class="keyword">int</span> whence);</span><br></pre></td></tr></table></figure>
+
+<p>返回新的文件偏移量表示成功，-1表示错误。<br>offset参数取决于whence参数<br>1，当whence为SEEK_SET，文件偏移量被设置为距文件起始位置offset字节处。<br>2，当whence为SEEK_CUR，文件偏移量被设置为目前偏移的值加上offset。offset可以为整数也可以为负数。<br>3，当whence为SEEK_END，文件的偏移被设置为文件的大小加上offset，offset可以为整数，也可以为负数。</p>
+<p>由于lseek会返回新的文件偏移，因此我们可以使用下面方法得到目前偏移量。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">off_t</span> currpos;</span><br><span class="line">currpos = lseek(fd, <span class="number">0</span>, SEEK_CUR);</span><br></pre></td></tr></table></figure>
+
+<p>上面的方法也可用于检测文件是否支持seek，如果文件描述符指向的为一个管道，FIFO或者套接字，lseek就会将errno设置为ESPIPE并返回-1。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>下面的函数用于检测标准输入是否拥有seek能力。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(lseek(STDIN_FILENO, <span class="number">0</span>, SEEK_CUR) == <span class="number">-1</span>)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"cannot seek\n"</span>);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"seek OK\n"</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ./a.out &lt; /etc/passwd</span><br><span class="line">seek OK</span><br><span class="line">$ cat &lt; /etc/passwd | ./a.out</span><br><span class="line">cannot seek</span><br><span class="line">$ ./a.out &lt; /var/spool/cron/FIFO</span><br><span class="line">cannot seek</span><br></pre></td></tr></table></figure>
+
+<p>正常情况下，一个文件的目前偏移量必须为非负数，但对于一个设备是允许偏移量为复数的。但是对于正常文件必须为非负数。由于负数偏移量的存在，所以我们在比较返回值是应比较是否等于-1来判断是否发生错误，而不能仅判断是否小于0。<br>文件偏移可以比文件当前大小更大，在这种情况下在下次写入时会自动扩展文件。这样会导致文件中央有个空洞，这种情况是被允许的，对于没有写入的内容，当读取时返回的值为0。空洞并不需要存储到磁盘中。</p>
+<h2 id="例子-1"><a href="#例子-1" class="headerlink" title="例子"></a>例子</h2><p>下面的程序用于创建一个包含空洞的文件。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="keyword">char</span> buf1[] = <span class="string">"abcdefghij"</span>;</span><br><span class="line"><span class="keyword">char</span> buf2[] = <span class="string">"ABCDEFGHIJ"</span>;</span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> fd;</span><br><span class="line">    <span class="keyword">if</span> ((fd = creat(<span class="string">"file.hole"</span>, FILE_MODE)) &lt; <span class="number">0</span>)</span><br><span class="line">    err_sys(<span class="string">"creat error"</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">write</span>(fd, buf1, <span class="number">10</span>) != <span class="number">10</span>)</span><br><span class="line">        err_sys(<span class="string">"buf1 write error"</span>);</span><br><span class="line">    <span class="comment">/* offset now = 10 */</span></span><br><span class="line">    <span class="keyword">if</span> (lseek(fd, <span class="number">16384</span>, SEEK_SET) == <span class="number">-1</span>)</span><br><span class="line">        err_sys(<span class="string">"lseek error"</span>);</span><br><span class="line">    <span class="comment">/* offset now = 16384 */</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">write</span>(fd, buf2, <span class="number">10</span>) != <span class="number">10</span>)</span><br><span class="line">        err_sys(<span class="string">"buf2 write error"</span>);</span><br><span class="line">    <span class="comment">/* offset now = 16394 */</span></span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:/home/<span class="built_in">test</span><span class="comment"># mkdir chapter3</span></span><br><span class="line">root@ubuntu:/home/<span class="built_in">test</span><span class="comment"># cd chapter3</span></span><br><span class="line">root@ubuntu:/home/<span class="built_in">test</span>/chapter3<span class="comment"># vim hole.c</span></span><br><span class="line">root@ubuntu:/home/<span class="built_in">test</span>/chapter3<span class="comment"># gcc -o hole hole.c </span></span><br><span class="line">root@ubuntu:/home/<span class="built_in">test</span>/chapter3<span class="comment"># ./hole</span></span><br><span class="line">root@ubuntu:/home/<span class="built_in">test</span>/chapter3<span class="comment"># ls -l file.hole </span></span><br><span class="line">-rw-r--r-- 1 root root 16394 Dec  5 14:04 file.hole</span><br><span class="line">root@ubuntu:/home/<span class="built_in">test</span>/chapter3<span class="comment"># od -c file.hole </span></span><br><span class="line">0000000   a   b   c   d   e   f   g   h   i   j  \0  \0  \0  \0  \0  \0</span><br><span class="line">0000020  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0</span><br><span class="line">*</span><br><span class="line">0040000   A   B   C   D   E   F   G   H   I   J</span><br><span class="line">0040012</span><br><span class="line">root@ubuntu:/home/<span class="built_in">test</span>/chapter3<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<p>在存储时中间空洞部分并不会存到磁盘中。</p>
+<h1 id="read-函数"><a href="#read-函数" class="headerlink" title="read 函数"></a>read 函数</h1><p>数据利用read函数从一个打开的文件中读取数据</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ssize_t</span> <span class="built_in">read</span>(<span class="keyword">int</span> fd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> nbytes);</span><br></pre></td></tr></table></figure>
+
+<p>返回值为读取的数据长度，0表示处于文件尾，-1表示错误。<br>关于读取到的数据长度小于需要的长度有以下几种情况：<br>1，当读取一个正常文件，如果在获取到nbytes长度数据前到了文件的结尾，则返回的值为读取位置到文件结尾的数据长。<br>2，当从终端设备读取，正常情况下一次读取一行数据。<br>3，当从一个网络读取数据，网络中的缓存可能造成返回的长度小于需要的长度。<br>4，当从一个pipe或FIFO读取时，如果pipe含有的数据长度比需要的短，read仅返回有效长度的数据。<br>5，当从一个记录型设备读取数据时，类似于磁带，一次只能返回一个记录。<br>6，当被一个信号打断时，也会导致接收数据变短。</p>
+<p>读操作位于文件目前偏移处，在成功返回前，偏移会加上实际读取的长度。<br>POSIX.1更改了read的原型，典型的定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">char</span> *buf, <span class="keyword">unsigned</span> nbytes)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>1，第二个参数改为了char型。<br>2，返回值变为有符号整型。<br>3，第三个参数被设置为无符号整数。来支持16bit的大小来读取最大65534个字节。</p>
+<h1 id="write-函数"><a href="#write-函数" class="headerlink" title="write 函数"></a>write 函数</h1><p>数据通过write函数向一个打开的文件中写入数据。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ssize_t</span> <span class="built_in">write</span>(<span class="keyword">int</span> fd, <span class="keyword">const</span> <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> nbytes);</span><br></pre></td></tr></table></figure>
+
+<p>返回实际写入的值表示成功，-1表示错误。<br>返回的值一般等于nbytes，否则就是有错误发生。写错误一般原因是写满磁盘或超过了该进程的文件大小限制。</p>
+<h1 id="IO效率"><a href="#IO效率" class="headerlink" title="IO效率"></a>IO效率</h1><p>下面的程序仅使用read和write函数来复制文件。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFFSIZE 4096</span></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="keyword">char</span> buf[BUFFSIZE];</span><br><span class="line">    <span class="keyword">while</span> ((n = <span class="built_in">read</span>(STDIN_FILENO, buf, BUFFSIZE)) &gt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">write</span>(STDOUT_FILENO, buf, n) != n)</span><br><span class="line">            err_sys(<span class="string">"write error"</span>);</span><br><span class="line">    <span class="keyword">if</span> (n &lt; <span class="number">0</span>)</span><br><span class="line">        err_sys(<span class="string">"read error"</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>1，该函数从标准输入读，写到标准输出。标准输入输出的文件的打以及创建都是由SHELL自动完成。<br>2，该程序并不用关闭输入输出文件，实际上程序使用UNIX内核的特性在进程结束时关闭所有文件描述符。<br>3，这个例子既适用于文本文件也适用于二进制文件，因为对于内核而言这两种文件并没有区别。</p>
+<h1 id="文件共享"><a href="#文件共享" class="headerlink" title="文件共享"></a>文件共享</h1><p>UNIX系统支持打开的文件在不同进程之间共享，在描述dup函数前，我们先描述一下这种共享，内核使用三种数据结构来代表一个打开的文件，他们之间的关系决定了在文件共享情况下，一个进程对另一个的影响。<br>1，每一个进程在进程表上都有一个记录项，记录项中包含一张文件描述符表，每个描述符占用一项，和每个文件描述符相关联的是：<br>a,文件描述符标志（close_on_exec）.b,指向一个文件表项的指针。<br>2，内核为所有文件维持一张文件表，每个文件表项包含：<br>a，文件状态标志（读、写、扩展、同步和非阻塞。b,目前文件偏移量。c，一个指向文件v节点表项的指针。<br>3，每个打开的文件或设备都有一个v节点结构体，它包含着文件类型和操作该文件相关函数指针的信息。对大部分文件，v节点也包含一个文件的i节点。当文件被打开时该信息会从磁盘中读取到。因此所有文件相关信息都可有效读取。例如，$\color{yellow}{i节点}$包含文件拥有者，文件大小，文件块在磁盘中的实际指针等等。<br><strong>LINUX并没有v节点，它仅使用一个通用的i节点，它的功能类似于v节点</strong><br>下图展示了一个拥有两个不同文件打开的单一进程的三个表项的关系。一个文件作为标准输入打开，另一个作为标准输出打开：<br><img src="/assert/UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO/file.png" alt="Kernel data structures for open files"></p>
+<p>如果两个独立进程有相同文件打开，我们应该有如下配置：<br><img src="/assert/UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO/twofile.png" alt="Two independent processes with the same file open"><br>我们假定第一个进程将文件打开到描述符3同时第二个进程把相同文件打开到描述符4，每一个进程打开文件时获取他们自己的文件记录表项，但是对于该文件只有一个v节点。每一个进程获取他们自己的文件表项的一个原因是这样的话每个进程都有一个他们自己的目前文件偏移。<br>关于具体操作发生了什么如下所示</p>
+<p>1，在每一个write结束后，目前文件偏移会增加写入的字节长度，如果这导致增大文件大小，i节点中的目前文件大小设置为增大后的值。<br>2，如果一个文件以O_APPEND标志打开，则相应标志被设置到文件表项的文件状态标志中，每次对具有这种标志文件执行写操作时，文件表项中当前文件偏移量会先设置为i节点表项中的文件长度，并且每次写都会扩展到最后位置。<br>3，若一个文件用lseek定位到文件尾端，则文件表项当前文件偏移量被设置为i节点当前文件长度，注意这和第二点有不同，具体看原子操作相关内容。<br>4，lseek函数只修改文件表项中的当前文件偏移量，不进行任何IO操作。</p>
+<h1 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h1><h2 id="扩展文件"><a href="#扩展文件" class="headerlink" title="扩展文件"></a>扩展文件</h2><p>考虑一个单一进程想要扩展一个文件，在UNIX系统的老版本中并不支持O_APPEND选项打开，所以程序代码如下所示：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (lseek(fd, <span class="number">0L</span>, <span class="number">2</span>) &lt; <span class="number">2</span>)   <span class="comment">/*position to EOF*/</span></span><br><span class="line">    err_sys(<span class="string">"lseek error"</span>);</span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">write</span>(fd, buf, <span class="number">100</span>) != <span class="number">100</span>) <span class="comment">/*and write*/</span></span><br><span class="line">    err_sys(<span class="string">"write error"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>对于单一进程这个可以很好的运行，但是对于多个进程同时向该文件中写数据，例如写错误日志。我们假设有两个进程A和B，他们向同一个文件扩展数据。每个进程有独立的文件表项，也即有独立的文件目前偏移量。<br>我们假设A先将当前偏移指向文件结尾1500处，然后内核切换到B执行，这时B也将当前偏移指向文件结尾1500处，然后B向文件中写了100bytes数据，此时B偏移指向1600处，且文件结尾便宜为1600，然后内核再切换到A执行，此时A的当前偏移为1500，并没有变为1600，因此它写数据是从1500偏移处开始写，$\color{yellow}{从而会导致覆盖B写入的内容。}$<br>发生这种问题的原因就在于我们将文件偏移指向文件结尾与写文件是两个回调函数，内核可能再他们中间执行其他函数，而当我们设置O_APPEND标志时，内核就会再每次写之前都将目前文件偏移指向文件结尾。</p>
+<h2 id="pread-和-pwrite-函数"><a href="#pread-和-pwrite-函数" class="headerlink" title="pread 和 pwrite 函数"></a>pread 和 pwrite 函数</h2><p>Signal UNIX Specification包含两个函数允许应用采用原子方式seek并执行IO：pread和pwrite。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ssize_t</span> pread(<span class="keyword">int</span> fd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> nbytes, <span class="keyword">off_t</span> offset);</span><br><span class="line">    <span class="comment">//返回值：读取数据的字节数表成功，-1表错误。</span></span><br><span class="line"><span class="keyword">ssize_t</span> pwrite(<span class="keyword">int</span> fd, <span class="keyword">const</span> <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> nbytes, <span class="keyword">off_t</span> offset);</span><br><span class="line">    <span class="comment">//返回值：读取的字节数表成功，-1表错误。</span></span><br></pre></td></tr></table></figure>
+
+<p>调用pread大致等效于调用lseek与read，差别如下：<br>1，当我们调用pread时没法打断这两个操作。<br>2，目前文件偏移量不会更新。</p>
+<h2 id="创建一个文件"><a href="#创建一个文件" class="headerlink" title="创建一个文件"></a>创建一个文件</h2><p>我们来观察另一个原子操作，当我们使用O_CREAT和O_EXCL选项来打开一个文件。当这两个选项都存在时，如果文件已存在则打开文件会导致错误。我们之前说过检查文件是否存在与创建文件组合成一个原子操作。如果我们不用这个原子操作而使用下面的方法。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ((fd = <span class="built_in">open</span>(path, O_WRONLY)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (errno == ENOENT) &#123;</span><br><span class="line">        <span class="keyword">if</span> ((fd = creat(path, mode)) &lt; <span class="number">0</span>)</span><br><span class="line">            err_sys(<span class="string">"creat error"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        err_sys(<span class="string">"open error"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果文件在这两个函数调用之间被另一个进程创建，并且另一个进程写入了数据，则当本进程再次调用creat函数时会导致清除掉另一个数据写入的数据。将二者合并成一个原子操作即可避免这个问题。</p>
+<h1 id="dup-和-dup2函数"><a href="#dup-和-dup2函数" class="headerlink" title="dup 和 dup2函数"></a>dup 和 dup2函数</h1><p>一个已经存在的文件描述符通过以下两个函数中的一个即可实现创建副本。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dup</span><span class="params">(<span class="keyword">int</span> fd)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dup2</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">int</span> fd2)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>返回新的描述符表示成功，-1表示失败。<br>dup函数返回的文件描述符是未使用的最小值，dup2为fd2如果fd2已经打开，则它会首先关闭。如果fd等于fd2，dup2会并不会关闭fd并且返回fd2。否则，fd2的FD_CLOEXEC文件描述符标志就被清除，这样fd2在进程中调用exec时是打开状态。<br>这些函数返回的新文件描述符和参数fd共享同一个文件表项如下：<br><img src="/assert/UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO/dup.png" alt="dup后数据结构"><br>如图，我们假设开始时，进程执行</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">newfd = dup(<span class="number">1</span>);</span><br><span class="line">```\</span><br><span class="line"></span><br><span class="line">我们假定下一个有效描述符为<span class="number">3</span>，因为两个描述符指向同一个文件表项，他们共享同一个文件状态标志--<span class="built_in">read</span>,<span class="built_in">write</span>,appen,等等，以及相同的文件偏移。</span><br><span class="line">每一个描述符拥有它自己的文件描述符标志。新描述符的<span class="built_in">close</span>-on-exec标志总会被dup函数清除。</span><br><span class="line">另一个创建描述符副本的方式是通过fcntl函数，实际上：</span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line">dup(fd);</span><br><span class="line">等效于</span><br><span class="line">fcntl(fd, F_DUPFD, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">dup2(fd, fd2);</span><br><span class="line">等效于</span><br><span class="line"><span class="built_in">close</span>(fd2);</span><br><span class="line">fcntl(fd, F_DUPFD, fd2);</span><br></pre></td></tr></table></figure>
+
+<p>关于dup2与fcntl并不完全相同，他们差别如下：<br>1，dup2是一个原子操作。<br>2，在dup2和fcntl间有一些errno不同。</p>
+<h1 id="sync-fsync-和-fdatasync-函数"><a href="#sync-fsync-和-fdatasync-函数" class="headerlink" title="sync, fsync 和 fdatasync 函数"></a>sync, fsync 和 fdatasync 函数</h1><p>UNIX系统传统执行向大部分磁盘IO口写数据时都是有一个缓冲池，当我们向一个文件写数据，数据会首先被内核复制到它的一个缓冲区，之后排队等待写入磁盘，这被称作延时写（delayed write）。<br>当需要再次使用磁盘相应块数据时，内核已经将所有延时写的块都写到磁盘。为了确定磁盘文件系统与缓冲区的一致性，从而提供了sync,fsync和fdatasync函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fsync</span><span class="params">(<span class="keyword">int</span> fd)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fdatasync</span><span class="params">(<span class="keyword">int</span> fd)</span></span>;</span><br><span class="line">    <span class="comment">//返回0表示成功，-1表示错误</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">sync</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>sync函数只是简单将修改后的缓冲区数据排入写队列，它并不等待磁盘写操作结束。<br>函数sync一般被系统后台守护进程周期调用（大概每30S），经常称sync为update。这可以保证内核缓冲区周期冲洗（flush)。指令sync(1)也是调用sync函数。</p>
+<p>函数fsync仅关联一个文件，通过文件描述符fd指定，并且等待磁盘写完成后才返回。该函数通常被应用（需要确保修改的内容已经写到磁盘）例如数据库调用。</p>
+<p>函数fdatasync与fsync类似，只是它只更新数据部分，在调用fsync时文件属性也会同步更新。</p>
+<h1 id="fcntl-函数"><a href="#fcntl-函数" class="headerlink" title="fcntl 函数"></a>fcntl 函数</h1><p>fcntl函数可以更改一个已经打开文件的内容。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fcntl</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">int</span> cmd, ... <span class="comment">/* int arg */</span>)</span></span>;</span><br><span class="line">    <span class="comment">//返回值：取决于cmd。-1表示错误</span></span><br></pre></td></tr></table></figure>
+
+<p>fcntl函数主要用于下面五种不同目的<br>1，创建一个已经存在描述符的副本（cmd=F_DUPFD或F_DUPFD_CLOEXEC）<br>2，获取/设置文件描述符标志（cmd=F_GETFD或F_SETFD）<br>3，获取/设置文件状态标志（cmd=F_GETFL或F_SETFL）<br>4，获取/设置异步IO所有权（cmd=F_GETOWN或F_SETOWN）<br>5，获取/设置记录锁（cmd=F_GETLK,F_SETLK,或F_SETLKW）<br>下面我们讨论这11条指令中前8条，后三条之后在讲。</p>
+<p>$\color{yellow}{F_DUPFD}$   创建文件描述符fd的副本，该函数返回的新的文件描述符是没有打开的文件描述符中最小的，且要大于等于该函数第三个参数的数。新的描述符与fd共享相同的文件表项，但是新的描述符有它自己的描述符标志，它的FD_CLOEXEC文件标志被清除。</p>
+<p>$\color{yellow}{F_DUPFD_CLOEXEC}$   创建文件描述符副本，并且设置FD_CLOEXEC文件描述标志与新的描述符相关连。返回新的文件描述符。</p>
+<p>$\color{yellow}{F_GETFD}$   返回fd的文件描述符标志，目前只有一个文件描述标志被定义 FD_CLOEXEC标志。</p>
+<p>$\color{yellow}{F_SETFD}$   给fd设置文件描述标志。新的文件描述标志在第三个参数中设置。</p>
+<p>$\color{yellow}{F_GETFL}$   返回fd的文件状态标志，所有的文件状态标志如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>文件状态标志</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>O_RDONLY</td>
+<td>只读</td>
+</tr>
+<tr>
+<td>O_WRONLY</td>
+<td>只写</td>
+</tr>
+<tr>
+<td>O_RDWR</td>
+<td>仅读写</td>
+</tr>
+<tr>
+<td>O_EXEC</td>
+<td>仅执行</td>
+</tr>
+<tr>
+<td>O_SEARCH</td>
+<td>仅查询（目录）</td>
+</tr>
+<tr>
+<td>O_APPEND</td>
+<td>扩展写</td>
+</tr>
+<tr>
+<td>O_NONBLOCK</td>
+<td>非阻塞模式</td>
+</tr>
+<tr>
+<td>O_SYNC</td>
+<td>等待写操作完成（数据与属性）</td>
+</tr>
+<tr>
+<td>O_DSYNC</td>
+<td>等待写完成（仅数据）</td>
+</tr>
+<tr>
+<td>O_RSYNC</td>
+<td>同步读写</td>
+</tr>
+<tr>
+<td>O_FSYNC</td>
+<td>等待写完成（FreeBSD和Mac OS X）</td>
+</tr>
+<tr>
+<td>O_ASYNC</td>
+<td>异步IO（FreeBSD和Mac OS X）</td>
+</tr>
+</tbody></table>
+<p>由于前五个访问方式标志并不各占一位，且这五个值互斥，因此首先使用屏蔽字O_ACCMODE取得访问方式位，然后再与这5个值每一个比较。</p>
+<p>$\color{yellow}{F_SETFL}$   通过第三个参数设置文件状态标志，能够改变的标志位为O_APPEND,O_NONBLOCK,O_SYNC,O_DSYNC,O_RSYNC,O_FSYNC和O_ASYNC。</p>
+<p>$\color{yellow}{F_GETOWN}$  获取目前接收SIGIO和SIGURG信号的进程ID和进程组ID，</p>
+<p>$\color{yellow}{F_SETOWN}$  设置进程ID或进程组ID来获取SIGIO和SIGURG信号。一个正的arg指定进程ID，一个负的arg表示进程组ID为arg的绝对值。</p>
+<p>所有指令返回-1表示错误，其他的表示成功，下面四个指令有特殊返回值：F_DUPFD,F_GETFD,G_GETFL和F_GETOWN。</p>
+<h2 id="例子-2"><a href="#例子-2" class="headerlink" title="例子"></a>例子</h2>
       
 
       
@@ -195,7 +365,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">u-boot</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">LINUX</a>
         		</li>
       		
 		</ul>
@@ -251,7 +421,7 @@
     <a class="close js-modal-close" href="javascript:;" target="_blank" rel="noopener"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/12/05/UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -265,18 +435,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/11/19/u-boot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02019-11-19/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          u-boot学习笔记-Start.S
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/11/18/git-learning/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">git learning</div>
+    <a href="/2019/12/04/UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-System-Overview-%E4%B8%80/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">UNIX环境高级编程学习笔记 System Overview</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -295,19 +456,6 @@
             </div>
         </div>
         
-        
-        <div class="toc-container tooltip-left">
-            <i class="icon-font icon-category"></i>
-            <div class="tooltip tooltip-east">
-                <span class="tooltip-item">
-                </span>
-                <span class="tooltip-content">
-                    <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#相关汇编指令"><span class="toc-number">1.</span> <span class="toc-text">相关汇编指令</span></a></li></ol>
-                    </div>
-                </span>
-            </div>
-        </div>
         
     </div>
 </aside>
