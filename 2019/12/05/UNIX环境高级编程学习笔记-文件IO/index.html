@@ -19,7 +19,7 @@
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assets&#x2F;UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO&#x2F;file.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assets&#x2F;UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO&#x2F;twofile.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assets&#x2F;UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO&#x2F;dup.png">
-<meta property="og:updated_time" content="2019-12-06T03:13:39.310Z">
+<meta property="og:updated_time" content="2019-12-06T03:20:31.645Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;assets&#x2F;UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6IO&#x2F;file.png">
   
@@ -384,6 +384,7 @@
 <p><font color=#ff0000 size=5>在Linux上做时要小心，因为Linux实现使用指向实际文件的符号链接，在/dev/fd上使用creat会导致底层文件被截断</font></p>
 <p>某些系统提供路径名/dev/stdin,/dev/stdout和/dev/stderr（例如Linux），它等效于fd文件下的0,1,2文件。</p>
 <h1 id="杂记"><a href="#杂记" class="headerlink" title="杂记"></a>杂记</h1><p><font color=#ffdd00 size=5>关于LINUX文件描述符，默认情况下描述符0，1，2是自动打开的，对应于终端中的输入输出，因此如果一个函数是向描述符1或2直接写数据的话，则执行该函数时终端会直接打印出写的数据。如果从描述符0读取数据，则在执行时终端会自动等待输入数据。（需要注意的是，标准输入标准输出以及标准错误（也就是0，1，2）文件都是可读写的）</font></p>
+<p><font color=#ff0000 size=5>还有，如果使用close关闭了文件描述符1，则该函数将不能打印。</font></p>
 
       
 
